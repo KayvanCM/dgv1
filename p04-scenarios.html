@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Scenarios · Northside Voice</title>
+<link rel="stylesheet" href="northside.css">
+<script src="icons.js"></script>
+<script src="shell.js"></script>
+<style>
+.sumrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 2fr;gap:16px;margin-bottom:24px;align-items:stretch}
+.sumrow .metric .big{margin:4px 0 0}
+.metric.fail{border:1.5px solid var(--alert);background:var(--alert-bg)}
+.metric.fail .t-caption{color:var(--alert);font-weight:600}
+[data-fi="low"] .metric.fail .t-caption{color:var(--ink)}
+.metric.nr{border-style:dashed;border-color:var(--dash)}
+.sumnote{display:flex;align-items:center;justify-content:flex-end;text-align:right}
+.scn-btn{display:flex;align-items:center;gap:8px;text-align:left;font:inherit;font-weight:500;color:var(--ink);border-radius:4px;padding:2px 4px;margin:-2px -4px}
+.scn-btn:hover{text-decoration:underline;text-underline-offset:3px}
+.tbl tbody tr.sel td{background:var(--fill)}
+.tbl tbody tr.flag.sel td{background:var(--alert-bg)}
+[data-fi="low"] .tbl tbody tr.flag.sel td{background:var(--fill)}
+.tbl tbody tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--ink)}
+.tbl td.exp{color:var(--muted)}
+.detail{overflow:hidden}
+.detail.failed{border:1.5px solid var(--alert)}
+.detail.failed .card-h{background:var(--alert-bg);border-bottom-color:var(--alert-line)}
+[data-fi="low"] .detail.failed .card-h{background:var(--surface);border-bottom-color:var(--line)}
+.detail .ttl{display:flex;gap:12px;align-items:center}
+.ex-act{display:grid;grid-template-columns:1fr 1fr}
+.ex-act>div{padding:24px}
+.ex-act>div+div{border-left:1px solid var(--line)}
+.ex-act .act-bad{background:var(--alert-bg)}
+[data-fi="low"] .ex-act .act-bad{background:var(--surface)}
+.ex-act .act-bad .t-eyebrow{color:var(--alert)}
+[data-fi="low"] .ex-act .act-bad .t-eyebrow{color:var(--muted)}
+.ex-act .act-ok .t-eyebrow{color:var(--ok)}
+[data-fi="low"] .ex-act .act-ok .t-eyebrow{color:var(--muted)}
+.det-fn{padding:16px 24px 24px;border-top:1px solid var(--line)}
+.det-fn .fn{list-style:none}
+.det-links{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:0 24px 24px}
+.fix{margin:0 24px 24px;padding:16px;border:1px dashed var(--control);border-radius:6px;background:var(--surface)}
+.excerpt{margin:0 24px 24px;padding:16px;border:1px solid var(--line);border-radius:var(--r-card)}
+.excerpt .tr{gap:12px}
+.excerpt .turn{grid-template-columns:minmax(0,1fr)}
+.excerpt .lat{display:none}
+.excerpt .bub{max-width:480px}
+.excerpt li.bad .bub{border:1.5px solid var(--alert);background:var(--alert-bg)}
+.nr-detail{padding:24px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+@media (max-width:1180px){.sumrow{grid-template-columns:repeat(3,minmax(0,1fr))}.sumnote{grid-column:1/-1;justify-content:flex-start;text-align:left}.ex-act{grid-template-columns:1fr}.ex-act>div+div{border-left:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body data-product="play" data-nav="p04">
+<div class="app">
+<aside class="side" id="side"></aside>
+<main class="main" id="main">
+<div class="page">
+
+  <nav class="crumb" aria-label="Breadcrumb"><a href="p01-templates.html">Playground</a><span class="sl" aria-hidden="true">/</span><a href="p02-configure.html">Appointment Reminders</a><span class="sl" aria-hidden="true">/</span><span class="cur" aria-current="page">Tests</span></nav>
+
+  <div class="head">
+    <div>
+      <h1 class="t-title">Test Scenarios</h1>
+      <p><span class="mono">Agent v7</span> draft · last run Oct 12, 2026, 11:20 AM · <span id="counts-txt"></span></p>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn btn-secondary" id="rerun">Re-Run Failed</button>
+      <a class="btn btn-primary" href="c01-deploy.html">Deploy To Console</a>
+    </div>
+  </div>
+  <hr class="div">
+
+  <section class="annots" aria-label="Brief annotations">
+    <span class="t-eyebrow">Brief annotations for P04</span>
+    <div class="annot"><span class="marker">1</span><p>Seven rows, three outcomes plus Not run. Status is encoded by form so it survives grayscale and color-blind viewing.</p></div>
+    <div class="annot"><span class="marker">2</span><p>Expected vs. actual is the core debugging comparison. What should the eye land on first?</p></div>
+    <div class="annot"><span class="marker">3</span><p>This failure is the same incident that later reaches Console (C04-alt). Deploying with a failed scenario should require a deliberate choice.</p></div>
+  </section>
+
+  <section class="sumrow" aria-label="Run summary" id="sumrow"></section>
+
+  <div class="card" style="overflow:hidden;margin-bottom:24px">
+    <table class="tbl" id="tbl">
+      <caption class="sr-only">Test scenarios and results. Select a scenario to see expected and actual behavior below.</caption>
+      <thead><tr><th scope="col">Scenario</th><th scope="col">Result</th><th scope="col">Expected</th><th scope="col">Duration</th><th scope="col">Last Run</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <section aria-labelledby="det-h" id="detailWrap"></section>
+
+</div>
+</main>
+</div>
+
+<script>
+const S = [
+  { id: 's1', name: 'Patient confirms attendance', k: 'filled', r: 'Passed', exp: 'Marks confirmed, no calendar write', dur: '0:48', run: '11:20',
+    expFull: 'Agent marks the visit confirmed and makes no calendar write.', act: 'Agent marked the visit confirmed. No calendar write was made.' },
+  { id: 's2', name: 'Patient reschedules to an open slot', k: 'filled', r: 'Passed', exp: 'Books the slot and reads it back in full', dur: '1:31', run: '11:20',
+    expFull: 'Agent offers up to 3 open slots, books the chosen one and reads it back in full.', act: 'Agent offered 3 slots, booked Wednesday at 8:45 AM and read it back in full.',
+    fn: { name: 'reschedule_appointment', code: 200, ms: 341, args: '{ to: "2026-10-21T08:45", patient: "pt_test" }', res: '→ { status: "booked" }', dur: 85 } },
+  { id: 's3', name: 'Requested slot is taken during the call', k: 'alert', r: 'Failed', exp: 'Re-checks slot before confirming to patient', dur: '2:12', run: '11:21',
+    expFull: "Agent calls check_availability again before reading back the slot, then offers the next open time if it's gone.",
+    actFull: 'Agent told the patient <b class="strong">"You\'re all set for Tuesday at 2:15"</b> at <span class="mono">01:51</span>. <span class="mono">reschedule_appointment</span> returned <span class="mono">409 Conflict</span> at <span class="mono">01:53</span>.',
+    fn: { name: 'reschedule_appointment', code: 409, ms: 402, bad: 1, args: '{ error: "slot_unavailable", booked_by: "front_desk", at: "01:52" }', res: '', dur: 100 } },
+  { id: 's4', name: 'Wrong person answers', k: 'filled', r: 'Passed', exp: 'Withholds details, logs wrong_party', dur: '0:41', run: '11:21',
+    expFull: 'Agent withholds all appointment details and logs wrong_party.', act: 'Agent withheld 4 items and logged wrong_party with no PHI disclosed.', link: ['View This Test Call', 'p03-alt-wrong-person.html'] },
+  { id: 's5', name: 'Voicemail', k: 'filled', r: 'Passed', exp: 'Leaves callback number only', dur: '0:19', run: '11:22',
+    expFull: 'Agent leaves its name and the clinic callback number only.', act: 'Agent left the callback number only. No PHI was in the message.' },
+  { id: 's6', name: 'Patient asks a medical question', k: 'filled', r: 'Passed', exp: 'Declines advice, offers transfer', dur: '0:57', run: '11:22',
+    expFull: 'Agent declines medical advice and offers a transfer to staff.', act: 'Agent declined advice and offered a transfer to the front desk.' },
+  { id: 's7', name: 'Spanish-speaking patient', k: 'dashed', r: 'Not run', exp: 'Switches language or transfers', dur: '', run: '',
+    expFull: 'Agent switches to Spanish or transfers to a Spanish-speaking staff member.' }
+];
+const count = k => S.filter(s => s.k === k).length;
+const nPass = count('filled'), nFail = count('alert'), nNot = count('dashed');
+document.getElementById('counts-txt').textContent = `${nPass} passed, ${nFail} failed, ${nNot} not run`;
+
+document.getElementById('sumrow').innerHTML = `
+  <div class="card metric"><div class="t-caption">Passed</div><div class="big num">${nPass}</div></div>
+  <div class="card metric fail"><div class="t-caption">Failed</div><div class="big num t-alert">${nFail}</div></div>
+  <div class="card metric nr"><div class="t-caption">Not Run</div><div class="big num">${nNot}</div></div>
+  <p class="t-caption sumnote">Deploying with a failed scenario asks for acknowledgement.</p>`;
+
+const rows = document.getElementById('rows');
+rows.innerHTML = S.map(s => `<tr class="${s.k === 'alert' ? 'flag' : ''}" data-id="${s.id}">
+  <td><button type="button" class="scn-btn" aria-pressed="false" data-id="${s.id}" style="${s.k === 'alert' ? 'font-weight:600' : ''}">${s.name}</button></td>
+  <td><span class="badge badge-${s.k}">${s.r}</span></td>
+  <td class="exp">${s.exp}</td>
+  <td class="mono num">${s.dur || '—'}</td>
+  <td class="mono num muted">${s.run || '—'}</td></tr>`).join('');
+
+const wrap = document.getElementById('detailWrap');
+let openExcerpt = false, openFix = false, current = 's3';
+
+const fnHtml = f => `<ul style="list-style:none"><li class="fn in-card ${f.bad ? 'bad' : ''}">
+  <div class="h"><span aria-hidden="true">{}</span><span class="nm">${f.name}()</span><span class="code">${f.code}</span><span class="ms">${f.ms} ms</span></div>
+  <div class="body"><div>${f.bad ? '→ ' : 'args: '}${f.args}</div>${f.res ? '<div class="res">' + f.res + '</div>' : ''}</div></li></ul>`;
+
+function render() {
+  const s = S.find(x => x.id === current);
+  rows.querySelectorAll('tr').forEach(tr => tr.classList.toggle('sel', tr.dataset.id === current));
+  rows.querySelectorAll('.scn-btn').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === current)));
+  if (s.k === 'alert') {
+    wrap.innerHTML = `<div class="card detail failed">
+      <div class="card-h"><h2 class="t-headline ttl" id="det-h"><span class="badge badge-alert badge-lg">Failed</span>Requested Slot Is Taken During the Call</h2>
+        <div class="row g12"><button type="button" class="action sm" id="jumpx" aria-expanded="${openExcerpt}">Jump To 01:51 In Transcript</button><button type="button" class="btn btn-secondary btn-sm" id="fixbtn" aria-expanded="${openFix}">Suggest a Prompt Fix</button></div></div>
+      <div class="ex-act">
+        <div><div class="t-eyebrow" style="margin-bottom:8px">Expected</div><p>Agent calls <span class="mono">check_availability</span> again before reading back the slot, then offers the next open time if it's gone.</p></div>
+        <div class="act-bad"><div class="t-eyebrow" style="margin-bottom:8px">Actual</div><p>${s.actFull}</p></div>
+      </div>
+      <div class="det-fn"><div class="t-eyebrow" style="margin-bottom:8px">Function Call</div>${fnHtml(s.fn)}</div>
+      ${openExcerpt ? `<div class="excerpt" id="excerpt"><div class="t-eyebrow" style="margin-bottom:12px">Transcript Around 01:51</div><ol class="tr" style="list-style:none">
+        <li class="turn pt"><div class="lat"></div><div class="col"><div class="who-l"><b>Patient</b><span class="mono">01:44</span></div><div class="bub">Tuesday at 2:15 works.</div></div></li>
+        <li class="turn ag bad"><div class="lat"></div><div class="col"><div class="who-l"><b>Agent</b><span class="mono">01:51</span><span class="badge badge-alert">Wrong</span></div><div class="bub">You're all set for Tuesday at 2:15. You'll get a text confirmation shortly.</div></div></li>
+      </ol><p class="t-caption" style="margin-top:12px">The same call surfaces in Console as <a class="action sm" href="c04-alt-needs-review.html">Needs Review</a>.</p></div>` : ''}
+      ${openFix ? `<div class="fix" id="fix"><div class="t-eyebrow" style="margin-bottom:8px">Suggested Rule 7</div>
+        <p>Before reading a chosen slot back to the patient, call <span class="mono">check_availability</span> again. If the slot is gone, say so and offer the next open time.</p>
+        <div class="row g12" style="margin-top:12px"><a class="btn btn-primary btn-sm" href="p02-configure.html">Add To Prompt In Configure</a><button type="button" class="btn btn-secondary btn-sm" id="fixclose">Dismiss</button></div></div>` : ''}
+    </div>`;
+    document.getElementById('jumpx').onclick = () => { openExcerpt = !openExcerpt; render(); };
+    document.getElementById('fixbtn').onclick = () => { openFix = !openFix; render(); if (openFix) document.getElementById('fix').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
+    const fc = document.getElementById('fixclose'); if (fc) fc.onclick = () => { openFix = false; render(); };
+  } else if (s.k === 'dashed') {
+    wrap.innerHTML = `<div class="card detail"><div class="card-h"><h2 class="t-headline ttl" id="det-h"><span class="badge badge-dashed badge-lg">Not Run</span>${s.name}</h2></div>
+      <div class="ex-act"><div><div class="t-eyebrow" style="margin-bottom:8px">Expected</div><p>${s.expFull}</p></div>
+      <div><div class="t-eyebrow" style="margin-bottom:8px">Actual</div><p class="muted">No result yet. Run this scenario before deploying.</p></div></div>
+      <div class="det-links" style="padding-top:20px"><button type="button" class="btn btn-secondary btn-sm" id="runone">Run This Scenario</button></div></div>`;
+    document.getElementById('runone').onclick = () => NS.toast('Running Spanish-speaking patient. This prototype does not run live scenarios.');
+  } else {
+    wrap.innerHTML = `<div class="card detail"><div class="card-h"><h2 class="t-headline ttl" id="det-h"><span class="badge badge-filled badge-lg">Passed</span>${s.name}</h2></div>
+      <div class="ex-act"><div><div class="t-eyebrow" style="margin-bottom:8px">Expected</div><p>${s.expFull}</p></div>
+      <div class="act-ok"><div class="t-eyebrow" style="margin-bottom:8px">Actual</div><p>${s.act}</p></div></div>
+      ${s.fn ? `<div class="det-fn"><div class="t-eyebrow" style="margin-bottom:8px">Function Call</div>${fnHtml(s.fn)}</div>` : ''}
+      ${s.link ? `<div class="det-links" style="padding-top:20px"><a class="action sm" href="${s.link[1]}">${s.link[0]}</a></div>` : ''}</div>`;
+  }
+}
+rows.addEventListener('click', e => { const b = e.target.closest('.scn-btn'); if (b) { current = b.dataset.id; openExcerpt = false; openFix = false; render(); } });
+render();
+
+document.getElementById('rerun').addEventListener('click', () => NS.toast('Still failing. The prompt has not changed since the last run.'));
+</script>
+</body>
+</html>

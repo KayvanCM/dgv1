@@ -1,0 +1,1922 @@
+P01 
+ Element checklist
+ELEMENT CHECKLIST
+P01 
+ Choose a Template
+P01 
+ Choose a Template
+For Sam, integration engineer. Goal: pick a starting point that already works.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+Page header
+Item
+Rectangle
+Text
+Breadcrumb
+|433|433|433
+|433
+Playground / New voice agent
+Item
+Rectangle
+Text
+Title
+|433|433|433
+|433
+Start a new voice agent
+Item
+Rectangle
+Text
+Description
+|433|433|433
+|433
+Templates are working agents with prompts, functions and test scenarios you can adapt.
+Item
+Rectangle
+Text
+Secondary actions
+|433|433|433
+|433
+Import JSON 
+ Start blank
+Import JSON 
+ Start blank
+Filter
+Item
+Rectangle
+Text
+Category filter (Healthcare selected)
+|433|433|433
+|433
+All 
+ Healthcare 
+ Customer service 
+ Sales 
+ Logistics
+All 
+ Healthcare 
+ Customer service 
+ Sales 
+ Logistics
+Template cards (6)
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Name, direction and description
+|433|433|433
+|433
+Appointment reminders 
+ Outbound. Confirms, reschedules or cancels upcoming visits and updates the calendar.
+Appointment reminders 
+ Outbound. Confirms, reschedules or cancels upcoming visits and updates the calendar.
+Item
+Rectangle
+Text
+Capability tags
+|433|433|433
+|433
+Outbound 
+ Function calling 
+ PHI-aware
+Outbound 
+ Function calling 
+ PHI-aware
+Item
+Rectangle
+Text
+Selected state
+|433|433|433
+|433
+Appointment reminders: Selected
+Item
+Rectangle
+Text
+Other templates
+|433|433|433
+|433
+Front desk intake 
+ Prescription refill status 
+ Post-visit follow-up 
+ Insurance verification 
+ Blank agent
+Front desk intake 
+ Prescription refill status 
+ Post-visit follow-up 
+ Insurance verification 
+ Blank agent
+Template details
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Heading
+|433|433|433
+|433
+What's included in Appointment reminders
+Item
+Rectangle
+Text
+5 functions
+|433|433|433
+|433
+verify_identity 
+ get_appointment 
+ check_availability 
+ reschedule_appointment 
+ transfer_to_staff
+)Roboto Mono
+verify_identity 
+ get_appointment 
+ check_availability 
+ reschedule_appointment 
+ transfer_to_staff
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+6 variables
+|433|433|433
+|433
+{patient_first_name} {appointment_time} {provider} {location} {clinic_phone} {dob}
+)Roboto Mono
+{patient_first_name} {appointment_time} {provider} {location} {clinic_phone} {dob}
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+7 test scenarios
+|433|433|433
+|433
+Confirm 
+ Reschedule 
+ Slot conflict 
+ Wrong person 
+ Voicemail 
+ Medical question 
+ Spanish speaker
+Confirm 
+ Reschedule 
+ Slot conflict 
+ Wrong person 
+ Voicemail 
+ Medical question 
+ Spanish speaker
+Item
+Rectangle
+Text
+4 guardrails
+|433|433|433
+|433
+Verify identity before details 
+ No medical advice 
+ No PHI in voicemail 
+ Transfer on request
+Verify identity before details 
+ No medical advice 
+ No PHI in voicemail 
+ Transfer on request
+Item
+Rectangle
+Text
+Primary action
+|433|433|433
+|433
+Use this template
+P02 
+ Element checklist
+ELEMENT CHECKLIST
+P02 
+ Configure Agent
+P02 
+ Configure Agent
+For Sam. Goal: set up the agent and get to a test call.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+Header
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Breadcrumb with draft version
+|433|433|433
+|433
+Playground / Appointment reminders / Draft v7
+Item
+Rectangle
+Text
+Actions
+|433|433|433
+|433
+Save draft 
+ Start test call (primary)
+)Roboto Mono
+Save draft 
+ Start test call (primary)
+Roboto Mono
+R@Fs
+Tabs
+|433|433|433
+|433
+Item
+Rectangle
+Text
+5 tabs, Instructions active
+|433|433|433
+|433
+Instructions 
+ Voice & models 
+ Functions 
+ Variables 
+ Guardrails
+Instructions 
+ Voice & models 
+ Functions 
+ Variables 
+ Guardrails
+Instructions editor
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Greeting (first thing the agent says)
+|433|433|433
+|433
+Hi, this is the Northside Health assistant calling for {patient_first_name}.
+)Roboto Mono
+Hi, this is the Northside Health assistant calling for {patient_first_name}.
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+System prompt (6 numbered rules)
+|433|433|433
+|433
+You are a friendly scheduling assistant for Northside Health
+ 1. Confirm you are speaking with the patient
+ 6. If you reach voicemail, leave only your name and {clinic_phone}.
+)Roboto Mono
+You are a friendly scheduling assistant for Northside Health
+ 1. Confirm you are speaking with the patient
+ 6. If you reach voicemail, leave only your name and {clinic_phone}.
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Variables in use (5)
+|433|433|433
+|433
+{patient_first_name} {provider} {appointment_time} {location} {clinic_phone}
+)Roboto Mono
+{patient_first_name} {provider} {appointment_time} {location} {clinic_phone}
+Roboto Mono
+R@Fs
+Agent summary
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Models, with Edit
+|433|433|433
+|433
+Speech-to-text: Nova-3 Medical 
+ LLM: [Provider] 
+ fast tier 
+ Voice: Aura-2 
+ thalia-en 
+ Language: English (US)
+)Roboto Mono
+Speech-to-text: Nova-3 Medical 
+ LLM: [Provider] 
+ fast tier 
+ Voice: Aura-2 
+ thalia-en 
+ Language: English (US)
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Functions (5), each with its system
+|433|433|433
+|433
+verify_identity 
+ EHR, get_appointment 
+ EHR, check_availability 
+ EHR
+)Roboto Mono
+verify_identity 
+ EHR, get_appointment 
+ EHR, check_availability 
+ EHR
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Functions that write
+|433|433|433
+|433
+reschedule_appointment 
+ EHR 
+ writes; transfer_to_staff 
+ Telephony
+)Roboto Mono
+reschedule_appointment 
+ EHR 
+ writes; transfer_to_staff 
+ Telephony
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Guardrails (4)
+|433|433|433
+|433
+Verify identity before sharing details 
+ Never give medical advice 
+ No PHI in voicemail 
+ Transfer when the patient asks
+Verify identity before sharing details 
+ Never give medical advice 
+ No PHI in voicemail 
+ Transfer when the patient asks
+P03 
+ Element checklist
+ELEMENT CHECKLIST
+P03 
+ Live Test Call
+P03 
+ Live Test Call
+For Sam. Goal: find the exact moment a test call goes wrong.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+The test
+Item
+Rectangle
+Text
+Breadcrumb and back link
+|433|433|433
+|433
+Playground / Appointment reminders / Test call 
+ Back to config
+Playground / Appointment reminders / Test call 
+ Back to config
+Item
+Rectangle
+Text
+Test scenario (simulated patient)
+|433|433|433
+|433
+Reschedule 
+ Maria G., 59 
+ wants early next week
+Reschedule 
+ Maria G., 59 
+ wants early next week
+Item
+Rectangle
+Text
+Alternative
+|433|433|433
+|433
+Call my phone instead
+Call header
+Item
+Rectangle
+Text
+Status and elapsed time
+|433|433|433
+|433
+Live 
+ 01:42
+Live 
+ 01:42
+Item
+Rectangle
+Text
+Agent version
+|433|433|433
+|433
+Agent v7 draft
+Item
+Rectangle
+Text
+Controls
+|433|433|433
+|433
+Mute agent 
+ End call
+Mute agent 
+ End call
+The conversation
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Agent turn: speaker, timestamp, words
+|433|433|433
+|433
+Agent 
+ 00:02 
+ Hi, this is the Northside Health assistant calling for Maria. Is this Maria?
+Agent 
+ 00:02 
+ Hi, this is the Northside Health assistant calling for Maria. Is this Maria?
+Item
+Rectangle
+Text
+Patient turn
+|433|433|433
+|433
+Patient 
+ 00:24 
+ Actually I can
+t do Thursday. Do you have anything early next week?
+Patient 
+ 00:24 
+ Actually I can
+t do Thursday. Do you have anything early next week?
+Item
+Rectangle
+Text
+Function call: name, status, duration
+|433|433|433
+|433
+check_availability() 
+ 200 
+ 388 ms
+)Roboto Mono
+check_availability() 
+ 200 
+ 388 ms
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Function call args
+|433|433|433
+|433
+args: { provider: "dr_okafor", from: "2026-10-19", to: "2026-10-21" }
+)Roboto Mono
+args: { provider: "dr_okafor", from: "2026-10-19", to: "2026-10-21" }
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Function call result
+|433|433|433
+|433
+ 3 slots: Mon 19 10:00 
+ Tue 20 14:15 
+ Wed 21 08:45
+)Roboto Mono
+ 3 slots: Mon 19 10:00 
+ Tue 20 14:15 
+ Wed 21 08:45
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Second function call
+|433|433|433
+|433
+verify_identity() 
+ 200 
+ 212 ms 
+ { verified: true }
+)Roboto Mono
+verify_identity() 
+ 200 
+ 212 ms 
+ { verified: true }
+Roboto Mono
+R@Fs
+Call state
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Intent
+|433|433|433
+|433
+Reschedule
+Item
+Rectangle
+Text
+Identity
+|433|433|433
+|433
+Verified (DOB)
+)Roboto Mono
+Verified (DOB)
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Current appointment
+|433|433|433
+|433
+Thu Oct 15 
+ 9:30 AM
+Thu Oct 15 
+ 9:30 AM
+Item
+Rectangle
+Text
+Slots offered
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Calendar writes
+|433|433|433
+|433
+None yet
+Response latency
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Median turn
+|433|433|433
+|433
+640 ms
+Item
+Rectangle
+Text
+p95 turn
+|433|433|433
+|433
+1.1 s
+Item
+Rectangle
+Text
+Slowest
+|433|433|433
+|433
+check_availability 
+ 388 ms
+)Roboto Mono
+check_availability 
+ 388 ms
+Roboto Mono
+R@Fs
+Guardrails (3, each with status)
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Identity verified before details
+|433|433|433
+|433
+Passed
+Item
+Rectangle
+Text
+No medical advice
+|433|433|433
+|433
+Not triggered
+Item
+Rectangle
+Text
+Voicemail without PHI
+|433|433|433
+|433
+Not applicable
+P03-alt 
+ Element checklist
+ELEMENT CHECKLIST
+P03-alt 
+ Test Call 
+ Wrong Person Answers
+P03-alt 
+ Test Call 
+ Wrong Person Answers
+For Sam. Goal: confirm the agent protected PHI when the wrong person answered.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+The test
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Test scenario
+|433|433|433
+|433
+Wrong person 
+ patient's son answers
+Wrong person 
+ patient's son answers
+Item
+Rectangle
+Text
+Status and duration
+|433|433|433
+|433
+Ended 
+ 00:41
+Ended 
+ 00:41
+Item
+Rectangle
+Text
+Agent version and controls
+|433|433|433
+|433
+Agent v7 draft 
+ Mute agent 
+ End call
+Agent v7 draft 
+ Mute agent 
+ End call
+Guardrail banner
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Headline
+|433|433|433
+|433
+Guardrail held: identity not verified, so appointment details were withheld
+Item
+Rectangle
+Text
+Explanation
+|433|433|433
+|433
+The agent did not say the provider, date, time or location. It left a callback number only.
+The conversation
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Other person turn
+|433|433|433
+|433
+Other person 
+ 00:05 
+ No, this is her son. She
+s at work.
+Other person 
+ 00:05 
+ No, this is her son. She
+s at work.
+Item
+Rectangle
+Text
+Probing question
+|433|433|433
+|433
+Other person 
+ 00:16 
+ Is everything OK? Is this about her test results?
+Other person 
+ 00:16 
+ Is everything OK? Is this about her test results?
+Item
+Rectangle
+Text
+Agent declines without PHI
+|433|433|433
+|433
+Agent 
+ 00:20 
+ I'm not able to share details, but it's nothing urgent from this call
+Agent 
+ 00:20 
+ I'm not able to share details, but it's nothing urgent from this call
+Item
+Rectangle
+Text
+Function call
+|433|433|433
+|433
+log_outcome() 
+ 200 
+ 96 ms
+)Roboto Mono
+log_outcome() 
+ 200 
+ 96 ms
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Args and result
+|433|433|433
+|433
+args: { result: "wrong_party", phi_disclosed: false, retry: "+3h" } 
+ { logged: true, next_attempt: "13:42" }
+)Roboto Mono
+args: { result: "wrong_party", phi_disclosed: false, retry: "+3h" } 
+ { logged: true, next_attempt: "13:42" }
+Roboto Mono
+R@Fs
+Withheld from this call
+|433|433|433
+|433
+Item
+Rectangle
+Text
+4 items
+|433|433|433
+|433
+Provider name 
+ Appointment date & time 
+ Clinic location 
+ Reason for visit
+Provider name 
+ Appointment date & time 
+ Clinic location 
+ Reason for visit
+Outcome
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Result
+|433|433|433
+|433
+Wrong party
+Item
+Rectangle
+Text
+Next attempt
+|433|433|433
+|433
+Today 
+ 1:42 PM
+Today 
+ 1:42 PM
+Item
+Rectangle
+Text
+Scenario check
+|433|433|433
+|433
+Passed
+P04 
+ Element checklist
+ELEMENT CHECKLIST
+P04 
+ Test Scenarios & Results
+P04 
+ Test Scenarios & Results
+For Sam. Goal: know whether the agent is ready to deploy.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+Header
+Item
+Rectangle
+Text
+Breadcrumb
+|433|433|433
+|433
+Playground / Appointment reminders / Tests
+Item
+Rectangle
+Text
+Actions
+|433|433|433
+|433
+Re-run failed 
+ Deploy to Console (primary)
+)Roboto Mono
+Re-run failed 
+ Deploy to Console (primary)
+Roboto Mono
+R@Fs
+Run summary
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Title
+|433|433|433
+|433
+Test scenarios
+Item
+Rectangle
+Text
+Version, last run, counts
+|433|433|433
+|433
+Agent v7 draft 
+ last run Oct 12, 2026, 11:20 AM 
+ 5 passed, 1 failed, 1 not run
+Agent v7 draft 
+ last run Oct 12, 2026, 11:20 AM 
+ 5 passed, 1 failed, 1 not run
+Scenarios table
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Columns
+|433|433|433
+|433
+SCENARIO 
+ RESULT 
+ EXPECTED 
+ DURATION 
+ LAST RUN
+SCENARIO 
+ RESULT 
+ EXPECTED 
+ DURATION 
+ LAST RUN
+Item
+Rectangle
+Text
+Passed row
+|433|433|433
+|433
+Patient confirms attendance 
+ Passed 
+ Marks confirmed, no calendar write 
+ 0:48 
+ 11:20
+Patient confirms attendance 
+ Passed 
+ Marks confirmed, no calendar write 
+ 0:48 
+ 11:20
+Item
+Rectangle
+Text
+Failed row (with ! icon)
+|433|433|433
+|433
+Requested slot is taken during the call 
+ Failed 
+ Re-checks slot before confirming to patient 
+ 2:12 
+ 11:21
+Requested slot is taken during the call 
+ Failed 
+ Re-checks slot before confirming to patient 
+ 2:12 
+ 11:21
+Item
+Rectangle
+Text
+Not run row
+|433|433|433
+|433
+Spanish-speaking patient 
+ Not run 
+ Switches language or transfers 
+Spanish-speaking patient 
+ Not run 
+ Switches language or transfers 
+Item
+Rectangle
+Text
+Other rows
+|433|433|433
+|433
+Patient reschedules to an open slot 
+ Wrong person answers 
+ Voicemail 
+ Patient asks a medical question
+Patient reschedules to an open slot 
+ Wrong person answers 
+ Voicemail 
+ Patient asks a medical question
+Failure detail
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Heading
+|433|433|433
+|433
+Failed: Requested slot is taken during the call
+Item
+Rectangle
+Text
+Expected
+|433|433|433
+|433
+Agent calls check_availability again before reading back the slot, then offers the next open time if it's gone.
+)Roboto Mono
+Agent calls check_availability again before reading back the slot, then offers the next open time if it's gone.
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Actual
+|433|433|433
+|433
+Agent told the patient "You're all set for Tuesday at 2:15" at 01:51. reschedule_appointment returned 409 Conflict at 01:53.
+)Roboto Mono
+Agent told the patient "You're all set for Tuesday at 2:15" at 01:51. reschedule_appointment returned 409 Conflict at 01:53.
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Function call
+|433|433|433
+|433
+reschedule_appointment() 
+ 409 
+ 402 ms 
+ { error: "slot_unavailable", booked_by: "front_desk", at: "01:52" }
+)Roboto Mono
+reschedule_appointment() 
+ 409 
+ 402 ms 
+ { error: "slot_unavailable", booked_by: "front_desk", at: "01:52" }
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Links
+|433|433|433
+|433
+Jump to 01:51 in transcript 
+ Suggest a prompt fix
+Jump to 01:51 in transcript 
+ Suggest a prompt fix
+C01 
+ Element checklist
+ELEMENT CHECKLIST
+C01 
+ Deploy Reminder Campaign
+C01 
+ Deploy Reminder Campaign
+For Sam, with Teresa
+s sign-off. Goal: set the calling rules and deploy knowing the risks.
+For Sam, with Teresa
+s sign-off. Goal: set the calling rules and deploy knowing the risks.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+Header
+Item
+Rectangle
+Text
+Breadcrumb
+|433|433|433
+|433
+Voice Agents / Appointment reminders / Deploy
+Item
+Rectangle
+Text
+Title and description
+|433|433|433
+|433
+Deploy appointment reminders 
+ Calls go out automatically for appointments that match these rules.
+Deploy appointment reminders 
+ Calls go out automatically for appointments that match these rules.
+Item
+Rectangle
+Text
+Secondary action
+|433|433|433
+|433
+Cancel
+Calendar source
+|433|433|433
+|433
+Item
+Rectangle
+Text
+EHR connection and status
+|433|433|433
+|433
+EHR scheduling API (FHIR R4) 
+ Connected
+)Roboto Mono
+EHR scheduling API (FHIR R4) 
+ Connected
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Appointment types
+|433|433|433
+|433
+Follow-up, Procedure, New patient
+When to call
+|433|433|433
+|433
+Item
+Rectangle
+Text
+First attempt
+|433|433|433
+|433
+48 hours before
+Item
+Rectangle
+Text
+Second attempt
+|433|433|433
+|433
+24 hours before
+Item
+Rectangle
+Text
+Calling hours
+|433|433|433
+|433
+9 AM 
+ 7 PM, local
+9 AM 
+ 7 PM, local
+If no one answers
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Retries per attempt
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Time between retries
+|433|433|433
+|433
+3 hours
+Item
+Rectangle
+Text
+Voicemail toggle (on)
+|433|433|433
+|433
+Leave voicemail with callback number only (no PHI)
+)Roboto Mono
+Leave voicemail with callback number only (no PHI)
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+SMS toggle
+|433|433|433
+|433
+Send SMS reminder after final attempt
+Caller ID & hand-off
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Caller ID
+|433|433|433
+|433
+(555) 010-2200 
+ Northside Health
+)Roboto Mono
+(555) 010-2200 
+ Northside Health
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Transfer calls to
+|433|433|433
+|433
+Front desk queue 
+ (555) 010-2210
+)Roboto Mono
+Front desk queue 
+ (555) 010-2210
+Roboto Mono
+R@Fs
+Summary
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Agent version
+|433|433|433
+|433
+v7 (draft)
+)Roboto Mono
+v7 (draft)
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Appointments tomorrow
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Calls in first 24 h
+|433|433|433
+|433
+~640 incl. retries
+Item
+Rectangle
+Text
+Est. cost / day
+|433|433|433
+|433
+Deploy
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Failed-test warning
+|433|433|433
+|433
+1 test scenario failed 
+ "Requested slot is taken during the call" failed on Oct 12. Patients may be told a time that isn
+t booked.
+1 test scenario failed 
+ "Requested slot is taken during the call" failed on Oct 12. Patients may be told a time that isn
+t booked.
+Item
+Rectangle
+Text
+Acknowledgement checkbox
+|433|433|433
+|433
+I understand and want to deploy anyway
+Item
+Rectangle
+Text
+Primary action
+|433|433|433
+|433
+Deploy v7
+Item
+Rectangle
+Text
+Secondary link
+|433|433|433
+|433
+Back to tests
+C02 
+ Element checklist
+ELEMENT CHECKLIST
+C02 
+ Reminders Overview
+C02 
+ Reminders Overview
+For Teresa, front-desk operations lead. Goal: see at a glance whether reminders work and what needs her.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+Header
+Item
+Rectangle
+Text
+Breadcrumb and title
+|433|433|433
+|433
+Overview / Appointment reminders
+Item
+Rectangle
+Text
+Context line
+|433|433|433
+|433
+Agent v7 (deployed Oct 13) 
+ reminders live since Sep 15 
+ last 7 days
+)Roboto Mono
+Agent v7 (deployed Oct 13) 
+ reminders live since Sep 15 
+ last 7 days
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Actions
+|433|433|433
+|433
+Export
+Item
+Rectangle
+Text
+Date range (7 days selected)
+|433|433|433
+|433
+Today 
+ 7 days 
+ 30 days 
+ Custom
+Today 
+ 7 days 
+ 30 days 
+ Custom
+Metrics (5)
+|433|433|433
+|433
+Item
+Rectangle
+Text
+No-show rate, with before
+|433|433|433
+|433
+6.2% 
+ was 11.8% before the agent
+6.2% 
+ was 11.8% before the agent
+Item
+Rectangle
+Text
+Calls placed
+|433|433|433
+|433
+1,284 
+ across 902 appointments
+1,284 
+ across 902 appointments
+Item
+Rectangle
+Text
+Confirmed
+|433|433|433
+|433
+71% 
+ 644 appointments
+71% 
+ 644 appointments
+Item
+Rectangle
+Text
+Rescheduled, incl. failed writes
+|433|433|433
+|433
+ 81 
+ 2 failed to write
+ 81 
+ 2 failed to write
+Item
+Rectangle
+Text
+Unreached
+|433|433|433
+|433
+16% 
+ after all retries
+16% 
+ after all retries
+Trend chart
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Title
+|433|433|433
+|433
+No-show rate, last 12 weeks
+Item
+Rectangle
+Text
+Axis range and marker
+|433|433|433
+|433
+Jul 21 
+ Oct 12 
+ marker: Agent live 
+ Sep 15
+)Roboto Mono
+Jul 21 
+ Oct 12 
+ marker: Agent live 
+ Sep 15
+Roboto Mono
+R@Fs
+Needs attention (6)
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Header and link
+|433|433|433
+|433
+Needs attention 
+ View all
+Needs attention 
+ View all
+Item
+Rectangle
+Text
+Calendar write failed (2)
+|433|433|433
+|433
+Maria G. 
+ Tue Oct 20, 2:15 PM; James T. 
+ Wed Oct 21, 8:45 AM
+Maria G. 
+ Tue Oct 20, 2:15 PM; James T. 
+ Wed Oct 21, 8:45 AM
+Item
+Rectangle
+Text
+Asked for a person
+|433|433|433
+|433
+Linh P. 
+ transfer not answered
+Linh P. 
+ transfer not answered
+Item
+Rectangle
+Text
+Identity not verified
+|433|433|433
+|433
+3 attempts 
+ Robert K.
+3 attempts 
+ Robert K.
+Item
+Rectangle
+Text
+Low-confidence date
+|433|433|433
+|433
+"the fifteenth or fiftieth" 
+ Ana S.
+"the fifteenth or fiftieth" 
+ Ana S.
+Item
+Rectangle
+Text
+Opted out of calls
+|433|433|433
+|433
+Devon M.
+C03 
+ Element checklist
+ELEMENT CHECKLIST
+C03 
+ Call Log
+C03 
+ Call Log
+For Teresa. Goal: find a specific call, or every call that needs review.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+Header
+Item
+Rectangle
+Text
+Title and count
+|433|433|433
+|433
+Calls 
+ 1,284 calls in the last 7 days
+Calls 
+ 1,284 calls in the last 7 days
+Item
+Rectangle
+Text
+Action
+|433|433|433
+|433
+Export CSV
+Filters
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Search (placeholder)
+|433|433|433
+|433
+Patient name, phone or call ID
+Item
+Rectangle
+Text
+Agent
+|433|433|433
+|433
+Appointment reminders 
+Item
+Rectangle
+Text
+Date
+|433|433|433
+|433
+Last 7 days
+Item
+Rectangle
+Text
+Outcome tabs with counts
+|433|433|433
+|433
+All 1,284 
+ Confirmed 644 
+ Rescheduled 81 
+ Cancelled 36 
+ No answer 517 
+ Needs review 6
+All 1,284 
+ Confirmed 644 
+ Rescheduled 81 
+ Cancelled 36 
+ No answer 517 
+ Needs review 6
+Table
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Columns
+|433|433|433
+|433
+TIME 
+ PATIENT 
+ APPOINTMENT 
+ PROVIDER 
+ OUTCOME 
+ TRIES 
+ DURATION
+TIME 
+ PATIENT 
+ APPOINTMENT 
+ PROVIDER 
+ OUTCOME 
+ TRIES 
+ DURATION
+Item
+Rectangle
+Text
+Needs review row (with ! icon)
+|433|433|433
+|433
+Oct 13 
+ 10:04 
+ Maria G. 
+ 4471 
+ Thu Oct 15 
+ 9:30 AM 
+ Dr. Okafor 
+ Needs review 
+ 2:12
+Oct 13 
+ 10:04 
+ Maria G. 
+ 4471 
+ Thu Oct 15 
+ 9:30 AM 
+ Dr. Okafor 
+ Needs review 
+ 2:12
+Item
+Rectangle
+Text
+Masked phone under each name
+|433|433|433
+|433
+ 4471
+Item
+Rectangle
+Text
+Other outcomes, one row each
+|433|433|433
+|433
+Confirmed 
+ Rescheduled 
+ No answer 
+ Cancelled 
+ Voicemail
+Confirmed 
+ Rescheduled 
+ No answer 
+ Cancelled 
+ Voicemail
+Item
+Rectangle
+Text
+8 rows total
+|433|433|433
+|433
+Maria G., Samuel R., Priya N., Evelyn W., Jorge M., Hannah L., Linh P., Ahmed K.
+C04 
+ Element checklist
+ELEMENT CHECKLIST
+C04 
+ Call Detail
+C04 
+ Call Detail
+For Teresa and Sam. Goal: see exactly what happened on a call that went right.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+The call
+Item
+Rectangle
+Text
+Breadcrumb
+|433|433|433
+|433
+Calls / call_8f2a91
+)Roboto Mono
+Calls / call_8f2a91
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Patient name and status
+|433|433|433
+|433
+Priya N. 
+ Rescheduled
+Priya N. 
+ Rescheduled
+Item
+Rectangle
+Text
+Meta line
+|433|433|433
+|433
+Oct 13, 2026 
+ 9:58 AM 
+ 1:47 
+ Appointment reminders v7
+Oct 13, 2026 
+ 9:58 AM 
+ 1:47 
+ Appointment reminders v7
+Item
+Rectangle
+Text
+Call ID
+|433|433|433
+|433
+call_8f2a91
+)Roboto Mono
+call_8f2a91
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Actions
+|433|433|433
+|433
+Open in EHR 
+ Call back
+Open in EHR 
+ Call back
+Tabs
+Item
+Rectangle
+Text
+3 sections, Transcript active
+|433|433|433
+|433
+Transcript 
+ Function calls 
+ Audit log
+Transcript 
+ Function calls 
+ Audit log
+Transcript
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Playback position and speed
+|433|433|433
+|433
+0:41 / 1:47 
+Item
+Rectangle
+Text
+Agent turn
+|433|433|433
+|433
+Agent 
+ 00:38 
+ I have Monday the 19th at 10 AM, Tuesday the 20th at 2:15 PM, or Wednesday the 21st at 8:45 AM. Which works best?
+Agent 
+ 00:38 
+ I have Monday the 19th at 10 AM, Tuesday the 20th at 2:15 PM, or Wednesday the 21st at 8:45 AM. Which works best?
+Item
+Rectangle
+Text
+Patient turn
+|433|433|433
+|433
+Patient 
+ 00:46 
+ Monday the nineteenth at ten.
+Patient 
+ 00:46 
+ Monday the nineteenth at ten.
+Item
+Rectangle
+Text
+Function call
+|433|433|433
+|433
+reschedule_appointment() 
+ 200 
+ 341 ms
+)Roboto Mono
+reschedule_appointment() 
+ 200 
+ 341 ms
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Args and result
+|433|433|433
+|433
+args: { from: "2026-10-15T11:15", to: "2026-10-19T10:00", patient: "pt_7710" } 
+ { status: "booked", ehr_ref: "APT-55812" }
+)Roboto Mono
+args: { from: "2026-10-15T11:15", to: "2026-10-19T10:00", patient: "pt_7710" } 
+ { status: "booked", ehr_ref: "APT-55812" }
+Roboto Mono
+R@Fs
+Calendar change
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Before (released)
+|433|433|433
+|433
+Thu Oct 15 
+ 11:15 AM
+Thu Oct 15 
+ 11:15 AM
+Item
+Rectangle
+Text
+After (booked)
+|433|433|433
+|433
+Mon Oct 19 
+ 10:00 AM
+Mon Oct 19 
+ 10:00 AM
+Item
+Rectangle
+Text
+Provider and location
+|433|433|433
+|433
+Dr. Alvarez 
+ Elm Street clinic
+Dr. Alvarez 
+ Elm Street clinic
+Item
+Rectangle
+Text
+EHR write
+|433|433|433
+|433
+Confirmed 
+ 9:59:58 AM
+Confirmed 
+ 9:59:58 AM
+Item
+Rectangle
+Text
+EHR reference
+|433|433|433
+|433
+APT-55812
+Identity
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Verified by
+|433|433|433
+|433
+Verified by DOB
+Item
+Rectangle
+Text
+Phone (masked)
+|433|433|433
+|433
+ 7710
+Item
+Rectangle
+Text
+Reveal link
+|433|433|433
+|433
+Show full details (logged)
+)Roboto Mono
+Show full details (logged)
+Roboto Mono
+R@Fs
+Call quality
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Transcript confidence
+|433|433|433
+|433
+0.94 avg
+Item
+Rectangle
+Text
+Lowest word
+|433|433|433
+|433
+"nineteenth" 
+ 0.71
+"nineteenth" 
+ 0.71
+Item
+Rectangle
+Text
+Median latency
+|433|433|433
+|433
+610 ms
+C04-alt 
+ Element checklist
+ELEMENT CHECKLIST
+C04-alt 
+ Needs Review 
+ Calendar Write Failed
+C04-alt 
+ Needs Review 
+ Calendar Write Failed
+For Teresa (not technical). Goal: understand what went wrong for Maria and fix it. Sam uses it to debug.
+}fff}fff}fff
+}fff
+Gray text under each item is the example content on the screen.
+The call
+Item
+Rectangle
+Text
+Breadcrumb
+|433|433|433
+|433
+Calls / call_3c71d0
+)Roboto Mono
+Calls / call_3c71d0
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Patient name and status (with ! icon)
+|433|433|433
+|433
+Maria G. 
+ Needs review
+Maria G. 
+ Needs review
+Item
+Rectangle
+Text
+Meta line
+|433|433|433
+|433
+Oct 13, 2026 
+ 10:04 AM 
+ 2:12 
+ Appointment reminders v7
+Oct 13, 2026 
+ 10:04 AM 
+ 2:12 
+ Appointment reminders v7
+Item
+Rectangle
+Text
+Call ID
+|433|433|433
+|433
+call_3c71d0
+)Roboto Mono
+call_3c71d0
+Roboto Mono
+R@Fs
+Item
+Rectangle
+Text
+Actions
+|433|433|433
+|433
+Open in EHR 
+ Call back
+Open in EHR 
+ Call back
+The problem
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Headline
+|433|433|433
+|433
+Maria was told an appointment time that isn't booked
+Item
+Rectangle
+Text
+Explanation
+|433|433|433
+|433
+At 01:51 the agent confirmed Tue Oct 20 at 2:15 PM. The calendar write failed at 01:53 because the front desk booked that slot at 01:52. Her original appointment, Thu Oct 15 at 9:30 AM, is still on the calendar.
+The evidence
+|433|433|433
+|433
+Item
+Rectangle
+Text
+Playback position and speed
+|433|433|433
+|433
+1:44 / 2:12 
+Item
+Rectangle
+Text
+Patient turn
+|433|433|433
+|433
+Patient 
+ 01:44 
+ Tuesday at 2:15 works.
+Patient 
+ 01:44 
+ Tuesday at 2:15 works.
+Item
+Rectangle
+Text
+Agent read-back
+|433|433|433
+|433
+Agent 
+ 01:47 
+ Great. Just to confirm: Tuesday, October 20 at 2:15 PM with Dr. Okafor.
+Agent 
+ 01:47 
+ Great. Just to confirm: Tuesday, October 20 at 2:15 PM with Dr. Okafor.
+Item
+Rectangle
+Text
+The turn where it went wrong
+|433|433|433
+|433
+Agent 
+ 01:51 
+ You
+re all set for Tuesday at 2:15. You
+ll get a text confirmation shortly.

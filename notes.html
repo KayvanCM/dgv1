@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Notes · Northside Voice</title>
+<link rel="stylesheet" href="northside.css">
+<script src="icons.js"></script>
+<script src="shell.js"></script>
+<style>
+.page{max-width:1000px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+section.n{margin-bottom:56px;scroll-margin-top:24px}
+section.n>h2{margin-bottom:8px}
+section.n>.lead{color:var(--muted);max-width:720px;margin-bottom:24px}
+.spec{display:grid;grid-template-columns:200px minmax(0,1fr) 260px;gap:16px 24px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--fill)}
+.spec:last-child{border-bottom:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.swatch{width:20px;height:20px;border-radius:4px;border:1px solid var(--line);display:inline-block;vertical-align:middle;margin-right:8px}
+.flowimg{border:1px solid var(--line);border-radius:var(--r-card);padding:12px;background:#fff;overflow-x:auto}
+.flowimg img{display:block;min-width:1200px;width:100%;height:auto}
+.eye{display:grid;grid-template-columns:96px 1fr 1fr 1fr;gap:0 16px}
+.eye>*{padding:12px 0;border-bottom:1px solid var(--fill)}
+.eye>.hd{border-bottom:1px solid var(--line);padding-top:0}
+.ok-t{color:var(--ok);font-weight:600}.bad-t{color:var(--alert);font-weight:600}
+td.r,th.r{text-align:right}
+ol.route{padding-left:20px;display:flex;flex-direction:column;gap:8px}
+@media (max-width:1180px){.spec{grid-template-columns:1fr}.two{grid-template-columns:1fr}.eye{grid-template-columns:72px 1fr}.eye>.hd:nth-child(n+3){display:none}}
+</style>
+</head>
+<body data-product="ref" data-nav="">
+<div class="app">
+<aside class="side" id="side"></aside>
+<main class="main" id="main">
+<div class="page">
+
+  <nav class="crumb" aria-label="Breadcrumb"><a href="p01-templates.html">Northside Voice</a><span class="sl" aria-hidden="true">/</span><span class="cur" aria-current="page">Design Notes</span></nav>
+  <div class="head"><div>
+    <h1 class="t-title">Design Notes</h1>
+    <p>Type scale, system rules and the reasoning behind the 10 screens. Written to support a 25 minute walkthrough.</p></div></div>
+  <hr class="div">
+
+  <nav class="toc" aria-label="On this page">
+    <a class="chip" href="#how">How To Review</a><a class="chip" href="#flow">User Flow</a><a class="chip" href="#type">Type Scale</a><a class="chip" href="#mono">Monospace Rule</a><a class="chip" href="#eye">Where The Eye Goes</a><a class="chip" href="#color">Color Logic</a><a class="chip" href="#kit">Kit Components</a><a class="chip" href="#qs">Brief Questions</a><a class="chip" href="#more">Open Items</a>
+  </nav>
+
+  <section class="n" id="how" aria-labelledby="how-h">
+    <h2 class="t-headline" id="how-h">How To Review This Prototype</h2>
+    <p class="lead">Every screen is a real page and the links between them follow the user flow. The left nav has three controls that change how you read it.</p>
+    <div class="two">
+      <div class="card pad stack g12">
+        <h3 class="t-heading">Left Nav Controls</h3>
+        <dl class="kv ruled">
+          <dt>Playground / Console</dt><dd>Switches product and its screens</dd>
+          <dt>Fidelity: Low / High</dt><dd>Low is the kit's pure grayscale. High adds color.</dd>
+          <dt>Brief Annotations</dt><dd>Shows the numbered notes from the brief on each screen</dd>
+          <dt>Reset Demo</dt><dd>Puts every resolved call back in the queue</dd>
+        </dl>
+      </div>
+      <div class="card pad stack g12">
+        <h3 class="t-heading">Suggested Walkthrough Path</h3>
+        <ol class="route">
+          <li><a class="action" href="p01-templates.html">P01</a> pick a template, then <a class="action" href="p02-configure.html">P02</a> read the prompt</li>
+          <li><a class="action" href="p03-live-call.html">P03</a> find the slow turn, then <a class="action" href="p03-alt-wrong-person.html">P03-alt</a> a held guardrail</li>
+          <li><a class="action" href="p04-scenarios.html">P04</a> the failed scenario, then <a class="action" href="c01-deploy.html">C01</a> the acknowledgement gate</li>
+          <li><a class="action" href="c02-overview.html">C02</a> and <a class="action" href="c03-call-log.html">C03</a> triage, then <a class="action" href="c04-call-detail.html">C04</a> a good call</li>
+          <li><a class="action" href="c04-alt-needs-review.html">C04-alt</a> the same failure reaching Maria. Resolve it and watch the counts drop.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="n" id="flow" aria-labelledby="flow-h">
+    <h2 class="t-headline" id="flow-h">User Flow</h2>
+    <p class="lead">One failure travels the whole flow. The agent skips the re-check before booking, scenario 3 in P04 fails, the team can still deploy after acknowledging, and the failure shows up as C04-alt in Console.</p>
+    <div class="flowimg"><img src="assets/user-flow.svg" alt="User flow in three lanes. Lane A, developer builds and tests in Playground: choose template, configure agent, live test call, run test scenarios, decision whether all scenarios pass, deploy campaign. Lane B, agent call logic at runtime: place call, verify identity, share appointment, confirm, reschedule or cancel, with a re-check of the slot before booking. Lane C, clinic staff monitor and resolve in Console: reminders overview, call log, call detail, resolve and rebook."></div>
+  </section>
+
+  <section class="n" id="type" aria-labelledby="type-h">
+    <h2 class="t-headline" id="type-h">Type Scale</h2>
+    <p class="lead">Inter for language and Roboto Mono for machine strings. Seven text styles plus one mono style. All sizes and line heights are even pixels. Weight does most of the work, so the scale stays small.</p>
+    <div class="card pad">
+      <div class="spec"><div><div class="t-heading">Display</div><div class="t-caption">40 / 44 · 600 · -2.5%</div></div><div class="t-display">6.2%</div><div class="t-caption">One number per screen. Only the No-Show Rate on C02.</div></div>
+      <div class="spec"><div><div class="t-heading">Title</div><div class="t-caption">28 / 32 · 600 · -2%</div></div><div class="t-title">Needs Review</div><div class="t-caption">Page title. One per screen. Also metric values.</div></div>
+      <div class="spec"><div><div class="t-heading">Headline</div><div class="t-caption">20 / 24 · 600 · -1.4%</div></div><div class="t-headline">Maria was told a time that isn't booked</div><div class="t-caption">Section headline, banner statement.</div></div>
+      <div class="spec"><div><div class="t-heading">Heading</div><div class="t-caption">16 / 24 · 600 · -0.8%</div></div><div class="t-heading">How should we fix this for Maria?</div><div class="t-caption">Card titles, option titles, template names.</div></div>
+      <div class="spec"><div><div class="t-heading">Body</div><div class="t-caption">14 / 20 · 400</div></div><div class="t-body">Calls go out automatically for appointments that match these rules.</div><div class="t-caption">Everything a person reads, including what patients said.</div></div>
+      <div class="spec"><div><div class="t-heading">Caption</div><div class="t-caption">12 / 16 · 400 · gray</div></div><div class="t-caption">Oct 13, 2026 · 10:04 AM · 2:12</div><div class="t-caption">Metadata, helper text, hints.</div></div>
+      <div class="spec"><div><div class="t-heading">Eyebrow</div><div class="t-caption">12 / 16 · 600 · caps +6%</div></div><div class="t-eyebrow">Technical details, for Sam</div><div class="t-caption">Group labels and table headers.</div></div>
+      <div class="spec"><div><div class="t-heading">Mono</div><div class="t-caption">Roboto Mono 12 / 16 · 400</div></div><div class="t-mono">check_availability() 200 · 388 ms</div><div class="t-caption">Machine strings only. See the rule below.</div></div>
+    </div>
+  </section>
+
+  <section class="n" id="mono" aria-labelledby="mono-h">
+    <h2 class="t-headline" id="mono-h">When To Use Monospace</h2>
+    <p class="lead">The test is origin. If a machine produced the text and a developer might copy, compare or search it, it is mono. If a person said or wrote it, it is sans. If Teresa has to read it to understand the story, it is sans. If Sam has to match it against logs, it is mono.</p>
+    <div class="two">
+      <div class="card pad stack g12">
+        <h3 class="t-heading">Mono</h3>
+        <div class="lines">
+          <div class="row between"><span class="mono">reschedule_appointment()</span><span class="t-caption">Function names</span></div>
+          <div class="row between"><span class="mono">{ error: "slot_unavailable" }</span><span class="t-caption">Args and results</span></div>
+          <div class="row between"><span class="badge badge-alert" style="font-family:var(--mono)">409</span><span class="t-caption">Status codes</span></div>
+          <div class="row between"><span class="mono">1.1 s · 388 ms</span><span class="t-caption">Latencies and durations</span></div>
+          <div class="row between"><span class="mono">call_3c71d0 · APT-55812</span><span class="t-caption">IDs and references</span></div>
+          <div class="row between"><span class="var">{provider}</span><span class="t-caption">Prompt variables</span></div>
+          <div class="row between"><span class="mono">01:51</span><span class="t-caption">Transcript timestamps</span></div>
+        </div>
+      </div>
+      <div class="card pad stack g12">
+        <h3 class="t-heading">Sans, even when it looks technical</h3>
+        <div class="lines">
+          <div class="row between"><span>"Tuesday at 2:15 works."</span><span class="t-caption">Anything a patient or agent said</span></div>
+          <div class="row between"><span>Confirm you are speaking with the patient</span><span class="t-caption">The prompt's rules</span></div>
+          <div class="row between"><span>Thu Oct 15 · 9:30 AM</span><span class="t-caption">Appointment dates a person acts on</span></div>
+          <div class="row between"><span>Maria G.</span><span class="t-caption">Names and notes</span></div>
+          <div class="row between"><span>Deploy v7</span><span class="t-caption">Buttons and labels</span></div>
+        </div>
+        <p class="t-caption">Risk this rule accepts: a timestamp can be machine data or a date people act on. The test is who needs to match it against what.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="n" id="eye" aria-labelledby="eye-h">
+    <h2 class="t-headline" id="eye-h">Where The Eye Goes</h2>
+    <p class="lead">For each screen, what reads first, second and third, and the lever used. Size and weight lead. Position follows. Color only confirms what form already says.</p>
+    <div class="card pad">
+      <div class="eye" role="table" aria-label="Reading order per screen">
+        <div class="hd t-eyebrow" role="columnheader">Screen</div><div class="hd t-eyebrow" role="columnheader">First</div><div class="hd t-eyebrow" role="columnheader">Second</div><div class="hd t-eyebrow" role="columnheader">Third</div>
+        <div class="strong mono" role="cell">P01</div><div role="cell">The selected card: 2px ink border plus a Selected check</div><div role="cell">Details panel: four large counts, then the function list</div><div role="cell">Use This Template, the only filled button</div>
+        <div class="strong mono" role="cell">P02</div><div role="cell">The 6 numbered prompt rules, the most-edited thing</div><div role="cell">Functions That Write, labeled apart from read-only</div><div role="cell">Start Test Call</div>
+        <div class="strong mono" role="cell">P03</div><div role="cell">Live badge and 28px call clock</div><div role="cell">The transcript spine, with dashed mono function blocks inset from the bubbles</div><div role="cell">Latency gutter: the slow turn is a hollow bar with a bold value</div>
+        <div class="strong mono" role="cell">P03-alt</div><div role="cell">The calm banner: Guardrail Held, Working As Intended</div><div role="cell">The riskiest turn, outlined and pinned</div><div role="cell">Withheld list: four struck-through items</div>
+        <div class="strong mono" role="cell">P04</div><div role="cell">The Failed count and the tinted failed row with its ! badge</div><div role="cell">Expected beside Actual for that row</div><div role="cell">Deploy To Console, which then asks for acknowledgement</div>
+        <div class="strong mono" role="cell">C01</div><div role="cell">Calendar source with a Connected badge</div><div role="cell">When to call: attempts on a timeline, then no-answer rules</div><div role="cell">The failed-scenario gate that holds the Deploy button</div>
+        <div class="strong mono" role="cell">C02</div><div role="cell">Needs Attention queue, moved to the top</div><div role="cell">No-show rate at 40px, the number the clinic cares about</div><div role="cell">Four smaller metrics, then the trend</div>
+        <div class="strong mono" role="cell">C03</div><div role="cell">Needs Review tab and the flagged rows</div><div role="cell">Outcome tabs doubling as counts</div><div role="cell">Masked phone numbers in mono</div>
+        <div class="strong mono" role="cell">C04</div><div role="cell">Calendar change: before struck through, after solid</div><div role="cell">Transcript with the low-confidence word underlined</div><div role="cell">Identity and call quality</div>
+        <div class="strong mono" role="cell">C04-alt</div><div role="cell">The problem in one sentence, in plain words</div><div role="cell">What Maria believes next to what the calendar says</div><div role="cell">The fix card with a recommended option; evidence and technical details follow</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="n" id="color" aria-labelledby="color-h">
+    <h2 class="t-headline" id="color-h">Color Logic</h2>
+    <p class="lead">Form carries the meaning and color confirms it. Every status has text and a distinct shape, so Low fidelity reads the same story in pure grayscale. Color is used for state and for the one thing that needs a person.</p>
+    <div class="card" style="overflow:hidden;margin-bottom:24px">
+      <table class="tbl"><caption class="sr-only">Status forms and what color adds</caption>
+        <thead><tr><th scope="col">Meaning</th><th scope="col">Form (always)</th><th scope="col">Badge</th><th scope="col">Color adds (High)</th></tr></thead>
+        <tbody>
+          <tr><td>Done, passed</td><td>Filled</td><td><span class="badge badge-filled">Confirmed</span></td><td>Green</td></tr>
+          <tr><td>Changed</td><td>Outline</td><td><span class="badge badge-outline">Rescheduled</span></td><td>Blue</td></tr>
+          <tr><td>Absent, not run</td><td>Dashed</td><td><span class="badge badge-dashed">No answer</span></td><td>Nothing, on purpose</td></tr>
+          <tr><td>Passive, closed</td><td>Muted fill</td><td><span class="badge badge-muted">Cancelled</span></td><td>Nothing, on purpose</td></tr>
+          <tr><td>Needs a person</td><td>Heavy outline with !</td><td><span class="badge badge-alert">Needs review</span></td><td>Red, only here</td></tr>
+          <tr><td>Switch on or off</td><td>Knob position plus label</td><td><button type="button" class="toggle" role="switch" aria-checked="true" data-toggle aria-label="Example, on"><span class="trk"></span></button></td><td>Green when on</td></tr>
+          <tr><td>Links and focus</td><td>Underline, 2px focus ring</td><td><a class="action" href="#color">Text action</a></td><td>Blue</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class="t-heading" style="margin-bottom:12px">Contrast, Computed From The Tokens</h3>
+    <div class="card" style="overflow:hidden">
+      <table class="tbl"><caption class="sr-only">Contrast ratios of the main token pairs</caption>
+        <thead><tr><th scope="col">Pair</th><th scope="col" class="r">Ratio</th><th scope="col">Needs</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+          <tr><td>Ink on white</td><td class="r num">17.4</td><td>4.5 text</td><td class="ok-t">Pass</td></tr>
+          <tr><td>Muted text #626262 on white</td><td class="r num">6.1</td><td>4.5 text</td><td class="ok-t">Pass</td></tr>
+          <tr><td>Muted text #626262 on #EBEBEB</td><td class="r num">5.1</td><td>4.5 text</td><td class="ok-t">Pass</td></tr>
+          <tr><td>Kit gray #6B6B6B on #EBEBEB</td><td class="r num">4.47</td><td>4.5 text</td><td class="bad-t">Misses by 0.03</td></tr>
+          <tr><td>Link blue on white</td><td class="r num">6.4</td><td>4.5 text</td><td class="ok-t">Pass</td></tr>
+          <tr><td>White on Confirmed green</td><td class="r num">5.9</td><td>4.5 text</td><td class="ok-t">Pass</td></tr>
+          <tr><td>Alert red on alert tint</td><td class="r num">4.9</td><td>4.5 text</td><td class="ok-t">Pass</td></tr>
+          <tr><td>Control edge #8C8C8C on white</td><td class="r num">3.4</td><td>3 non-text</td><td class="ok-t">Pass</td></tr>
+          <tr><td>Kit field border #D1D1D1 on white</td><td class="r num">1.5</td><td>3 non-text</td><td class="bad-t">Fails for controls</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="t-caption" style="margin-top:12px">Checked by calculation only. I have not run a screen reader or an automated audit, and that is the first thing I would add.</p>
+  </section>
+
+  <section class="n" id="kit" aria-labelledby="kit-h">
+    <h2 class="t-headline" id="kit-h">Kit Components And What I Changed</h2>
+    <p class="lead">Buttons, badges, chips, fields, toggles, tabs, nav items, metric cards, bubbles, function blocks, variable chips, the waveform and annotation markers come straight from the Wireframe Kit, with its radii and fills. ChatKit supplied the app shell, page headers, hairlines and the transcript-plus-rail layout.</p>
+    <div class="two">
+      <div class="card pad stack g12">
+        <h3 class="t-heading">Deviations From The Kit</h3>
+        <div class="lines">
+          <div><div class="strong">Secondary text #626262, not #6B6B6B</div><div class="muted">The kit gray misses 4.5:1 on its own muted fill.</div></div>
+          <div><div class="strong">Control edges #8C8C8C, not #D1D1D1</div><div class="muted">Field and checkbox borders need 3:1 to be seen. Card hairlines keep #D1D1D1.</div></div>
+          <div><div class="strong">Badge heights 22px, buttons 38px</div><div class="muted">The kit uses 21 and 37. Even pixels keep rows on a 4px rhythm.</div></div>
+          <div><div class="strong">Chip text 14px, not 13px</div><div class="muted">Keeps every size on the type scale. The chip is about 58px wide against the kit's 55.</div></div>
+          <div><div class="strong">Toggle on is green in High</div><div class="muted">The kit toggle is ink. Ink is still the Low state.</div></div>
+        </div>
+      </div>
+      <div class="card pad stack g12">
+        <h3 class="t-heading">Derived From Kit Borders And Radii</h3>
+        <div class="lines">
+          <div><div class="strong">Table, banner, option card</div><div class="muted">Card border and 8px radius, hairline rows from the muted fill.</div></div>
+          <div><div class="strong">Checkbox, radio</div><div class="muted">Field edge, badge radius, ink fill when selected.</div></div>
+          <div><div class="strong">Segmented control, disclosure, toast, chart</div><div class="muted">Nav item fill with a white selected state; ink and the waveform grays for the chart.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="n" id="qs" aria-labelledby="qs-h">
+    <h2 class="t-headline" id="qs-h">Answers To The Brief's Questions</h2>
+    <div class="stack g16">
+      <div class="card pad"><h3 class="t-heading">How do speech turns, function calls and guardrail events differ in weight?</h3><p class="muted" style="margin-top:4px">Speech is the spine: bubbles at body size, agent in gray fill and patient in white. Function calls are dashed, mono and inset 16px, so they read as events beside the conversation. Guardrail events live in the rail and as a calm banner, never in the spine.</p></div>
+      <div class="card pad"><h3 class="t-heading">On C04-alt, what is read first: the mismatch, the moment in the call, or the fix?</h3><p class="muted" style="margin-top:4px">The mismatch, stated as a sentence a non-technical person can act on. The fix card is sticky beside the evidence so the decision never scrolls away.</p></div>
+      <div class="card pad"><h3 class="t-heading">Five KPIs on C02: what leads for a clinic, and what for a developer?</h3><p class="muted" style="margin-top:4px">The clinic leads: no-show rate at 40px. The developer's call outcomes step down to 28px, and the one that matters to both, writes that failed, carries an alert badge.</p></div>
+      <div class="card pad"><h3 class="t-heading">How does "what the agent did not say" (P03-alt) become legible?</h3><p class="muted" style="margin-top:4px">A short list of struck-through placeholders with "Not said" and a check, plus a banner that names what was withheld. A list is the right form because the items are discrete and the reviewer is counting.</p></div>
+      <div class="card pad"><h3 class="t-heading">Where do masked PHI and low-confidence words need emphasis, and where should they recede?</h3><p class="muted" style="margin-top:4px">Masked values are mono and quiet by default, with a logged reveal. Low-confidence words get a dotted underline and a caption only on dates and times, where an error changes a calendar.</p></div>
+    </div>
+  </section>
+
+  <section class="n" id="more" aria-labelledby="more-h">
+    <h2 class="t-headline" id="more-h">Open Items</h2>
+    <div class="two">
+      <div class="card pad stack g12">
+        <h3 class="t-heading">Invented Or Inferred Content</h3>
+        <div class="lines">
+          <div>P02 prompt wording and the five other templates' descriptions</div>
+          <div>Extra rows in the Call Log, and the Today and 30 Days numbers on C02</div>
+          <div>C01 retry value, taken from the user flow's "max 2 per attempt"</div>
+          <div>The suggested prompt fix on P04</div>
+        </div>
+      </div>
+      <div class="card pad stack g12">
+        <h3 class="t-heading">With More Time</h3>
+        <div class="lines">
+          <div>Run a screen reader and an automated audit on every page</div>
+          <div>Test the guardrail weighting question with Sam</div>
+          <div>Let the P02 fix flow into a passing P04 re-run</div>
+          <div>Compact density for the Call Log and a dark mode</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+</div>
+</body>
+</html>

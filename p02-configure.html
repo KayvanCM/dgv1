@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configure Agent · Northside Voice</title>
+<link rel="stylesheet" href="northside.css">
+<script src="icons.js"></script>
+<script src="shell.js"></script>
+<style>
+.editor{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;background:#fff}
+.editor .bar{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--surface)}
+.greet{padding:16px 20px;line-height:28px}
+.rule{display:grid;grid-template-columns:32px 1fr;padding:12px 20px;border-bottom:1px solid var(--fill);line-height:28px}
+.rule:last-child{border-bottom:0}
+.rule .n{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.editor textarea.textarea{border:0;border-radius:0;min-height:160px;display:block;line-height:24px;padding:16px 20px}
+.editor textarea.textarea:focus{outline-offset:-2px}
+.ed-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid var(--line);background:var(--surface)}
+.sect-h{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:12px}
+.warnline{display:flex;gap:8px;align-items:center;margin-top:8px}
+.vlist{display:flex;flex-wrap:wrap;gap:8px;list-style:none}
+.rail-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.fcard{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid var(--fill)}
+.fcard:last-child{border-bottom:0;padding-bottom:0}
+.fcard:first-of-type{padding-top:0}
+.subgrp{border-top:1px solid var(--line);margin-top:16px;padding-top:16px}
+.toggle.rev{flex-direction:row-reverse;justify-content:space-between;width:100%;padding:12px 0;border-bottom:1px solid var(--fill)}
+.toggle.rev:last-child{border-bottom:0;padding-bottom:0}
+.toggle.rev:first-of-type{padding-top:0}
+.glist{display:flex;flex-direction:column}
+.grow{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid var(--fill)}
+.grow:last-child{border-bottom:0}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 24px}
+.tabpanel{outline:none}
+.tbl td .mono{white-space:nowrap}
+</style>
+</head>
+<body data-product="play" data-nav="p02">
+<div class="app">
+<aside class="side" id="side"></aside>
+<main class="main" id="main">
+<div class="page">
+
+  <nav class="crumb" aria-label="Breadcrumb"><a href="p01-templates.html">Playground</a><span class="sl" aria-hidden="true">/</span><a href="p01-templates.html">Appointment Reminders</a><span class="sl" aria-hidden="true">/</span><span class="cur" aria-current="page">Draft v7</span></nav>
+
+  <section class="annots" aria-label="Brief annotations">
+    <span class="t-eyebrow">Brief annotations for P02</span>
+    <div class="annot"><span class="marker">1</span><p>The prompt is long, technical and the most-edited thing on the page. Monospace shows variables in place; hierarchy should make the numbered rules scannable.</p></div>
+    <div class="annot"><span class="marker">2</span><p>Variable tokens confirm what data the agent receives from the calendar per call.</p></div>
+    <div class="annot"><span class="marker">3</span><p>Functions that write to the EHR are labeled separately from read-only lookups. That difference matters for safety.</p></div>
+    <div class="annot"><span class="marker">4</span><p>Guardrails are toggles for review visibility, but enforced in the prompt and backend. Open question: how much weight should they carry?</p></div>
+  </section>
+
+  <header class="head">
+    <div>
+      <h1 class="t-title">Appointment Reminders</h1>
+      <p>Draft v7. Edit the prompt and the agent's tools, then run a test call.</p>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn btn-secondary" id="save">Save Draft</button>
+      <button type="button" class="btn btn-primary" id="test">Start Test Call</button>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Agent settings" id="tablist">
+    <button type="button" class="tab" role="tab" id="tab-instructions" aria-controls="panel-instructions" aria-selected="true">Instructions</button>
+    <button type="button" class="tab" role="tab" id="tab-models" aria-controls="panel-models" aria-selected="false">Voice &amp; Models</button>
+    <button type="button" class="tab" role="tab" id="tab-functions" aria-controls="panel-functions" aria-selected="false">Functions</button>
+    <button type="button" class="tab" role="tab" id="tab-variables" aria-controls="panel-variables" aria-selected="false">Variables</button>
+    <button type="button" class="tab" role="tab" id="tab-guardrails" aria-controls="panel-guardrails" aria-selected="false">Guardrails</button>
+  </div>
+
+  <div class="cols main-rail">
+    <div>
+
+      <!-- Instructions -->
+      <div role="tabpanel" class="tabpanel" id="panel-instructions" aria-labelledby="tab-instructions" tabindex="0">
+        <section class="sect" aria-labelledby="greet-h">
+          <div class="sect-h"><h2 class="t-eyebrow" id="greet-h">Greeting, the First Thing the Agent Says</h2><button type="button" class="action sm" id="greet-edit">Edit</button></div>
+          <div class="editor">
+            <div class="greet" id="greet-view"></div>
+            <div id="greet-edit-wrap" hidden>
+              <textarea class="textarea" id="greet-ta" aria-label="Greeting text. Wrap variables in curly braces." rows="3"></textarea>
+              <div class="ed-foot"><button type="button" class="btn btn-secondary btn-sm" id="greet-cancel">Cancel</button><button type="button" class="btn btn-primary btn-sm" id="greet-done">Done</button></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sect" aria-labelledby="prompt-h">
+          <div class="sect-h"><h2 class="t-eyebrow" id="prompt-h">System Prompt, <span id="rulecount">6</span> Numbered Rules</h2><span class="row g12"><span class="t-caption" id="edited">Edited 12 min ago</span><button type="button" class="action sm" id="prompt-edit">Edit</button></span></div>
+          <div class="editor">
+            <div class="bar"><span class="t-caption" id="preamble">You are a friendly scheduling assistant for Northside Health. Follow these rules in order.</span></div>
+            <ol id="rules" style="list-style:none"></ol>
+            <div id="prompt-edit-wrap" hidden>
+              <textarea class="textarea" id="prompt-ta" aria-label="System prompt rules. One rule per line. Wrap variables in curly braces." rows="8"></textarea>
+              <div class="ed-foot"><span class="t-caption" style="margin-right:auto">One rule per line. Numbers are added for you.</span><button type="button" class="btn btn-secondary btn-sm" id="prompt-cancel">Cancel</button><button type="button" class="btn btn-primary btn-sm" id="prompt-done">Done</button></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sect" aria-labelledby="vin-h">
+          <h2 class="t-eyebrow" id="vin-h" style="margin-bottom:12px">Variables In Use, <span id="varcount">5</span></h2>
+          <ul class="vlist" id="varsin"></ul>
+          <p class="warnline" id="varwarn" hidden><span class="badge badge-alert" id="varwarn-b">Not defined</span><span class="t-caption" id="varwarn-t"></span></p>
+          <p class="t-caption" style="margin-top:8px">Filled from the clinic calendar for each call.</p>
+        </section>
+      </div>
+
+      <!-- Voice & Models -->
+      <div role="tabpanel" class="tabpanel" id="panel-models" aria-labelledby="tab-models" tabindex="0" hidden>
+        <section class="card pad" aria-labelledby="vm-h">
+          <h2 class="t-heading" id="vm-h" style="margin-bottom:4px">Voice and Models</h2>
+          <p class="muted" style="margin-bottom:20px">What the agent hears with, thinks with and speaks with. Changes show in the summary.</p>
+          <div class="grid2">
+            <div class="field"><label for="m-stt">Speech-to-Text</label><div class="input mono-v"><select id="m-stt" data-k="stt"><option>Nova-3 Medical</option><option>Nova-3 General</option><option>Whisper Large</option></select>
+              <span id="c1"></span></div></div>
+            <div class="field"><label for="m-llm">LLM</label><div class="input mono-v"><select id="m-llm" data-k="llm"><option>[Provider], fast tier</option><option>[Provider], balanced tier</option><option>[Provider], reasoning tier</option></select>
+              <span id="c2"></span></div></div>
+            <div class="field"><label for="m-voice">Voice</label><div class="input mono-v"><select id="m-voice" data-k="voice"><option>Aura-2, thalia-en</option><option>Aura-2, orion-en</option><option>Aura-2, luna-en</option></select>
+              <span id="c3"></span></div></div>
+            <div class="field"><label for="m-lang">Language</label><div class="input"><select id="m-lang" data-k="lang"><option>English (US)</option><option>English (UK)</option><option>Spanish (US)</option></select>
+              <span id="c4"></span></div></div>
+          </div>
+          <p class="t-caption" style="margin-top:20px">Spanish speakers are handled by the Spanish speaker test scenario on Test Scenarios.</p>
+        </section>
+      </div>
+
+      <!-- Functions -->
+      <div role="tabpanel" class="tabpanel" id="panel-functions" aria-labelledby="tab-functions" tabindex="0" hidden>
+        <div class="card" style="overflow:hidden">
+          <table class="tbl">
+            <caption class="sr-only">Agent functions, their system and whether they read or write</caption>
+            <thead><tr><th scope="col">Function</th><th scope="col">System</th><th scope="col">Access</th><th scope="col">What It Does</th></tr></thead>
+            <tbody id="fn-rows"></tbody>
+          </table>
+        </div>
+        <p class="t-caption" style="margin-top:12px">Functions marked Writes change the clinic's records. They are always shown with a Writes badge in test calls.</p>
+      </div>
+
+      <!-- Variables -->
+      <div role="tabpanel" class="tabpanel" id="panel-variables" aria-labelledby="tab-variables" tabindex="0" hidden>
+        <div class="card" style="overflow:hidden">
+          <table class="tbl">
+            <caption class="sr-only">Variables available to the agent, their source and whether the prompt uses them</caption>
+            <thead><tr><th scope="col">Variable</th><th scope="col">Source</th><th scope="col">Example</th><th scope="col">In Prompt</th></tr></thead>
+            <tbody id="var-rows"></tbody>
+          </table>
+        </div>
+        <p class="t-caption" style="margin-top:12px">Every variable is filled from the clinic calendar for each call.</p>
+      </div>
+
+      <!-- Guardrails -->
+      <div role="tabpanel" class="tabpanel" id="panel-guardrails" aria-labelledby="tab-guardrails" tabindex="0" hidden>
+        <section class="card pad" aria-labelledby="g-h">
+          <h2 class="t-heading" id="g-h" style="margin-bottom:4px">Guardrails</h2>
+          <p class="muted" style="margin-bottom:8px">Always enforced in the prompt and in the backend. The switch only controls whether a guardrail event is shown in call reviews.</p>
+          <div class="glist" id="glist"></div>
+        </section>
+      </div>
+
+    </div>
+
+    <aside class="stack g16" aria-label="Agent summary">
+      <h2 class="t-eyebrow">Agent Summary</h2>
+      <section class="card pad" aria-labelledby="sum-m">
+        <div class="rail-h"><h3 class="t-heading" id="sum-m">Models</h3><button type="button" class="action sm" id="models-edit">Edit</button></div>
+        <dl class="kv ruled" id="sum-models"></dl>
+      </section>
+      <section class="card pad" aria-labelledby="sum-f">
+        <h3 class="t-heading" id="sum-f">Functions, 5</h3>
+        <p class="t-caption" style="margin-bottom:12px">Read-only lookups</p>
+        <ul id="sum-ro" style="list-style:none"></ul>
+        <div class="subgrp">
+          <div class="rail-h" style="margin-bottom:12px"><h3 class="t-heading">Functions That Write</h3><span class="wr">Writes</span></div>
+          <ul id="sum-wr" style="list-style:none"></ul>
+        </div>
+      </section>
+      <section class="card pad" aria-labelledby="sum-g">
+        <h3 class="t-heading" id="sum-g">Guardrails, 4</h3>
+        <p class="t-caption" style="margin-bottom:12px">Enforced in the prompt and in the backend. Switches control review visibility.</p>
+        <div id="sum-gr"></div>
+      </section>
+    </aside>
+  </div>
+
+</div>
+</main>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+/* ---------- state ---------- */
+const DEFINED = {
+  patient_first_name: ['Patient first name', 'Maria'],
+  appointment_time: ['Appointment time', 'Thu Oct 15, 9:30 AM'],
+  provider: ['Provider', 'Dr. Okafor'],
+  location: ['Location', 'Elm Street clinic'],
+  clinic_phone: ['Clinic phone', '(555) 010-2200'],
+  dob: ['Date of birth, for verification only', '1967-03-03']
+};
+const S = {
+  greeting: 'Hi, this is the Northside Health assistant calling for {patient_first_name}.',
+  rules: [
+    'Confirm you are speaking with the patient before saying anything else.',
+    'Verify identity with date of birth before sharing the provider, time or {location}.',
+    'Share the appointment: {provider}, {appointment_time} at {location}.',
+    'If the patient wants to reschedule, offer up to 3 open slots, read the chosen one back in full, then book it.',
+    'Never give medical advice. If the patient asks for a person, transfer them to staff.',
+    'If you reach voicemail, leave only your name and {clinic_phone}.'
+  ],
+  models: { stt: 'Nova-3 Medical', llm: '[Provider], fast tier', voice: 'Aura-2, thalia-en', lang: 'English (US)' },
+  guards: [
+    ['Verify identity before sharing details', 'The agent must collect a date of birth before any appointment detail.', true],
+    ['Never give medical advice', 'Declines clinical questions and offers a transfer to staff.', true],
+    ['No PHI in voicemail', 'Voicemails contain the agent name and the callback number only.', true],
+    ['Transfer when the patient asks', 'Hands the call to the front desk on request, at any point.', true]
+  ]
+};
+const FNS = [
+  ['verify_identity', 'EHR', 0, 'Checks the date of birth the patient gives against the record.'],
+  ['get_appointment', 'EHR', 0, 'Reads the upcoming visit for this patient.'],
+  ['check_availability', 'EHR', 0, 'Returns open slots for a provider in a date range.'],
+  ['reschedule_appointment', 'EHR writes', 1, 'Moves the visit to a new slot in the clinic calendar.'],
+  ['transfer_to_staff', 'Telephony', 1, 'Hands the live call to the front desk queue.']
+];
+
+const chipify = (t) => esc(t).replace(/\{([a-z_]+)\}/g, (m, n) => `<span class="var">{${n}}</span>`);
+const usedVars = () => {
+  const all = [S.greeting].concat(S.rules).join(' ');
+  const seen = [];
+  (all.match(/\{([a-z_]+)\}/g) || []).forEach(m => { const n = m.slice(1, -1); if (seen.indexOf(n) < 0) seen.push(n); });
+  return seen;
+};
+
+/* ---------- instructions ---------- */
+function renderInstr() {
+  $('greet-view').innerHTML = chipify(S.greeting);
+  $('rules').innerHTML = S.rules.map((r, i) => `<li class="rule"><span class="n" aria-hidden="true">${i + 1}</span><span><span class="sr-only">Rule ${i + 1}. </span>${chipify(r)}</span></li>`).join('');
+  $('rulecount').textContent = S.rules.length;
+  const used = usedVars();
+  $('varcount').textContent = used.length;
+  $('varsin').innerHTML = used.map(v => `<li><span class="var">{${v}}</span></li>`).join('');
+  const unknown = used.filter(v => !DEFINED[v]);
+  $('varwarn').hidden = !unknown.length;
+  if (unknown.length) $('varwarn-t').textContent = unknown.map(v => '{' + v + '}').join(', ') + ' is not a defined variable. Calls would read it aloud as written.';
+  renderVarRows();
+}
+const toggleEdit = (kind, on) => {
+  const isG = kind === 'greet';
+  $(isG ? 'greet-edit-wrap' : 'prompt-edit-wrap').hidden = !on;
+  $(isG ? 'greet-view' : 'rules').hidden = on;
+  $(kind + '-edit').textContent = on ? 'Editing' : 'Edit';
+  $(kind + '-edit').disabled = on;
+  $(kind + '-edit').setAttribute('aria-disabled', String(on));
+  if (on) {
+    $(isG ? 'greet-ta' : 'prompt-ta').value = isG ? S.greeting : S.rules.join('\n');
+    $(isG ? 'greet-ta' : 'prompt-ta').focus();
+  } else $(kind + '-edit').focus();
+};
+$('greet-edit').addEventListener('click', () => toggleEdit('greet', true));
+$('prompt-edit').addEventListener('click', () => toggleEdit('prompt', true));
+$('greet-cancel').addEventListener('click', () => toggleEdit('greet', false));
+$('prompt-cancel').addEventListener('click', () => toggleEdit('prompt', false));
+$('greet-done').addEventListener('click', () => {
+  const v = $('greet-ta').value.trim();
+  if (!v) { NS.toast('The greeting cannot be empty.'); return; }
+  S.greeting = v; $('edited').textContent = 'Edited just now'; renderInstr(); toggleEdit('greet', false);
+});
+$('prompt-done').addEventListener('click', () => {
+  const lines = $('prompt-ta').value.split('\n').map(l => l.replace(/^\s*\d+[.)]\s*/, '').trim()).filter(Boolean);
+  if (!lines.length) { NS.toast('Add at least one rule.'); return; }
+  S.rules = lines; $('edited').textContent = 'Edited just now'; renderInstr(); toggleEdit('prompt', false);
+});
+
+/* ---------- models + summary ---------- */
+function renderModels() {
+  const m = S.models;
+  $('sum-models').innerHTML = `<dt>Speech-to-text</dt><dd class="mono">${esc(m.stt)}</dd><dt>LLM</dt><dd class="mono">${esc(m.llm)}</dd><dt>Voice</dt><dd class="mono">${esc(m.voice)}</dd><dt>Language</dt><dd>${esc(m.lang)}</dd>`;
+}
+document.querySelectorAll('#panel-models select').forEach(sel => {
+  sel.addEventListener('change', () => { S.models[sel.dataset.k] = sel.value; renderModels(); });
+  const c = sel.parentElement.querySelector('span'); if (c) c.innerHTML = NS.chevd('chev');
+});
+
+function renderFns() {
+  const li = ([n, sys, w]) => `<li class="fcard"><span class="mono">${n}()</span><span class="t-caption">${sys}</span></li>`;
+  $('sum-ro').innerHTML = FNS.filter(f => !f[2]).map(li).join('');
+  $('sum-wr').innerHTML = FNS.filter(f => f[2]).map(li).join('');
+  $('fn-rows').innerHTML = FNS.map(([n, sys, w, d]) => `<tr><th scope="row" style="font-weight:400;letter-spacing:0;text-transform:none;color:inherit;padding:14px 16px;border-bottom:1px solid var(--fill);background:#fff"><span class="mono">${n}()</span></th><td>${sys}</td><td>${w ? '<span class="wr">Writes</span>' : '<span class="ro">Read</span>'}</td><td class="muted">${d}</td></tr>`).join('');
+}
+function renderVarRows() {
+  const used = usedVars();
+  const usedBy = { dob: 'verify_identity()' };
+  $('var-rows').innerHTML = Object.keys(DEFINED).map(k => {
+    const u = used.indexOf(k) > -1;
+    return `<tr><th scope="row" style="font-weight:400;letter-spacing:0;text-transform:none;color:inherit;padding:14px 16px;border-bottom:1px solid var(--fill);background:#fff"><span class="var">{${k}}</span></th><td>${DEFINED[k][0]}</td><td class="mono">${DEFINED[k][1]}</td><td>${u ? '<span class="badge badge-filled">In prompt</span>' : (usedBy[k] ? '<span class="badge badge-muted">Used by ' + usedBy[k] + '</span>' : '<span class="badge badge-dashed">Not in prompt</span>')}</td></tr>`;
+  }).join('');
+}
+
+/* ---------- guardrails (shared state, two views) ---------- */
+function renderGuards() {
+  const sw = (g, i, rev) => `<button type="button" class="toggle ${rev ? 'rev' : ''}" role="switch" aria-checked="${g[2]}" data-g="${i}"><span class="trk"></span><span>${g[0]}</span></button>`;
+  $('sum-gr').innerHTML = S.guards.map((g, i) => sw(g, i, true)).join('');
+  $('glist').innerHTML = S.guards.map((g, i) => `<div class="grow"><div><div class="strong">${g[0]}</div><div class="muted">${g[1]}</div></div>
+    <div class="row g12"><span class="badge ${g[2] ? 'badge-muted' : 'badge-dashed'}">${g[2] ? 'Enforced, shown in reviews' : 'Enforced, hidden from reviews'}</span>
+    <button type="button" class="toggle" role="switch" aria-checked="${g[2]}" data-g="${i}" aria-label="Show ${g[0]} in reviews"><span class="trk"></span></button></div></div>`).join('');
+  document.querySelectorAll('[data-g]').forEach(b => b.addEventListener('click', () => {
+    const g = S.guards[+b.dataset.g]; g[2] = !g[2];
+    NS.toast(g[2] ? g[0] + ' is shown in reviews.' : g[0] + ' is still enforced, but hidden from reviews.');
+    const keep = b.dataset.g, inRail = !!b.closest('#sum-gr');
+    renderGuards();
+    const again = (inRail ? $('sum-gr') : $('glist')).querySelector('[data-g="' + keep + '"]'); if (again) again.focus();
+  }));
+}
+
+/* ---------- tabs ---------- */
+NS.tabs($('tablist'), (t) => {
+  document.querySelectorAll('[role="tabpanel"]').forEach(p => p.hidden = p.id !== t.getAttribute('aria-controls'));
+  history.replaceState(null, '', '#' + t.id.replace('tab-', ''));
+});
+const openTab = (name) => { const t = $('tab-' + name); if (t) t.click(); };
+$('models-edit').addEventListener('click', () => { openTab('models'); $('tab-models').focus(); });
+if (location.hash) openTab(location.hash.slice(1));
+
+/* ---------- actions ---------- */
+$('save').addEventListener('click', () => NS.toast('Draft v7 saved.'));
+$('test').addEventListener('click', () => { NS.toast('Starting a simulated reschedule call.'); setTimeout(() => { location.href = 'p03-live-call.html'; }, 700); });
+
+renderInstr(); renderModels(); renderFns(); renderGuards();
+</script>
+</body>
+</html>

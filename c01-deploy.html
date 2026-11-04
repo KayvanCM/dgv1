@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deploy Appointment Reminders · Northside Voice</title>
+<link rel="stylesheet" href="northside.css">
+<script src="icons.js"></script>
+<script src="shell.js"></script>
+<style>
+.setrow{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px;padding:16px 0;border-bottom:1px solid var(--fill);align-items:center}
+.setrow:last-child{border-bottom:0}
+.setrow.top{align-items:start}
+.card.rows{padding:4px 20px}
+.src{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.src .lead{display:flex;gap:16px;align-items:center}
+.src .ico{width:32px;height:32px;border-radius:16px;background:var(--ok);color:#fff;display:grid;place-items:center;flex-shrink:0}
+[data-fi="low"] .src .ico{background:var(--ink)}
+.src .ico svg{width:16px;height:16px}
+.tl{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));position:relative;margin:8px 0 8px}
+.tl::before{content:"";position:absolute;left:12.5%;right:12.5%;top:11px;height:2px;background:var(--line)}
+.tl li{position:relative;text-align:center}
+.tl .marker{margin:0 auto 8px;position:relative}
+.sel-tag{display:flex;gap:4px;flex-wrap:wrap}
+.warn-h{display:flex;gap:12px;padding:16px 20px;background:var(--alert-bg)}
+[data-fi="low"] .warn-h{background:var(--surface)}
+.warn-h .bang{width:20px;height:20px;border-radius:50%;background:var(--alert);color:#fff;display:grid;place-items:center;font-weight:700;font-size:12px;flex-shrink:0;margin-top:2px}
+[data-fi="low"] .warn-h .bang{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.ackrow{padding:16px 20px;border-top:1px solid var(--alert-line)}
+[data-fi="low"] .ackrow{border-top-color:var(--line)}
+@media (max-width:1180px){.setrow{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-product="cons" data-nav="c01">
+<div class="app">
+<aside class="side" id="side"></aside>
+<main class="main" id="main">
+<div class="page">
+
+  <nav class="crumb" aria-label="Breadcrumb"><a href="p01-templates.html">Voice Agents</a><span class="sl" aria-hidden="true">/</span><a href="p02-configure.html">Appointment Reminders</a><span class="sl" aria-hidden="true">/</span><span class="cur" aria-current="page">Deploy</span></nav>
+
+  <div class="head">
+    <div>
+      <h1 class="t-title">Deploy Appointment Reminders</h1>
+      <p>Calls go out automatically for appointments that match these rules.</p>
+    </div>
+    <div class="actions"><a class="btn btn-secondary" href="c02-overview.html">Cancel</a></div>
+  </div>
+  <hr class="div">
+
+  <section class="annots" aria-label="Brief annotations">
+    <span class="t-eyebrow">Brief annotations for C01</span>
+    <div class="annot"><span class="marker">1</span><p>The agent reads and writes the clinic's real calendar. Connection status must be unmistakable.</p></div>
+    <div class="annot"><span class="marker">2</span><p>Timing rules are where most support tickets come from (calls too early or late). The patient's time zone is the default.</p></div>
+    <div class="annot"><span class="marker">3</span><p>PHI policy in plain language at the point of decision.</p></div>
+    <div class="annot"><span class="marker">4</span><p>Deploying with a known failure requires explicit acknowledgment. Should this block entirely? Open question for the candidate.</p></div>
+  </section>
+
+  <div class="cols main-rail">
+    <div>
+      <section class="sect" aria-labelledby="src-h">
+        <h2 class="t-eyebrow" id="src-h">Calendar Source</h2>
+        <div class="card pad" style="border:1.5px solid var(--ink)">
+          <div class="src">
+            <div class="lead">
+              <span class="ico" aria-hidden="true" id="srcico"></span>
+              <div><div class="t-heading">EHR scheduling API <span class="mono muted">(FHIR R4)</span></div><div class="muted">The agent reads and writes this calendar on every call.</div></div>
+            </div>
+            <span class="badge badge-filled badge-lg">Connected</span>
+          </div>
+          <div style="margin-top:16px"><div class="t-caption" id="apt-l">Appointment types</div>
+            <div class="sel-tag" style="margin-top:4px" role="list" aria-labelledby="apt-l"><span class="tag" role="listitem">Follow-up</span><span class="tag" role="listitem">Procedure</span><span class="tag" role="listitem">New Patient</span></div></div>
+        </div>
+      </section>
+
+      <section class="sect" aria-labelledby="when-h">
+        <h2 class="t-eyebrow" id="when-h">When To Call</h2>
+        <div class="card pad">
+          <ol class="tl">
+            <li><span class="marker" aria-hidden="true">1</span><div class="t-caption">First attempt</div><div class="t-heading">48 hours before</div></li>
+            <li><span class="marker" aria-hidden="true">2</span><div class="t-caption">Second attempt</div><div class="t-heading">24 hours before</div></li>
+            <li><span class="marker hollow" aria-hidden="true"></span><div class="t-caption">Appointment</div><div class="t-heading">Visit</div></li>
+          </ol>
+          <div class="setrow" style="margin-top:8px;padding-bottom:0;border-bottom:0;border-top:1px solid var(--fill)">
+            <div><div class="strong">Calling hours</div></div>
+            <div><span class="strong">9 AM – 7 PM, local</span><div class="t-caption">The patient's time zone is the default, so a call never lands at night.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sect" aria-labelledby="none-h">
+        <h2 class="t-eyebrow" id="none-h">If No One Answers</h2>
+        <div class="card rows">
+          <div class="setrow"><label for="retries" class="strong">Retries per attempt</label>
+            <div style="max-width:200px"><div class="input"><select id="retries"><option>0</option><option>1</option><option selected>2</option><option>3</option></select></div></div></div>
+          <div class="setrow"><label for="gap" class="strong">Time between retries</label>
+            <div style="max-width:200px"><div class="input"><select id="gap"><option>1 hour</option><option>2 hours</option><option selected>3 hours</option><option>4 hours</option></select></div></div></div>
+          <div class="setrow top"><span class="strong" id="vm-l">Voicemail</span>
+            <div><button type="button" class="toggle" role="switch" aria-checked="true" aria-labelledby="vm-t" aria-describedby="vm-d" data-toggle><span class="trk"></span><span id="vm-t">Leave voicemail with callback number only</span></button>
+              <p class="t-caption" id="vm-d" style="margin:4px 0 0 44px">No PHI. The message never includes the patient's name, the provider or the visit time.</p></div></div>
+          <div class="setrow"><span class="strong" id="sms-l">SMS</span>
+            <div><button type="button" class="toggle" role="switch" aria-checked="false" data-toggle><span class="trk"></span><span>Send SMS reminder after final attempt</span></button></div></div>
+        </div>
+      </section>
+
+      <section class="sect" aria-labelledby="cid-h">
+        <h2 class="t-eyebrow" id="cid-h">Caller ID &amp; Hand-Off</h2>
+        <div class="card rows">
+          <div class="setrow"><span class="strong">Caller ID</span><div><span class="mono">(555) 010-2200</span> <span class="muted">· Northside Health</span></div></div>
+          <div class="setrow"><label for="xfer" class="strong">Transfer calls to</label>
+            <div style="max-width:360px"><div class="input"><select id="xfer"><option selected>Front desk queue (555) 010-2210</option><option>Nurse line (555) 010-2230</option><option>Scheduling desk (555) 010-2240</option></select></div></div></div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="stack g16 sticky" aria-label="Deployment summary">
+      <section class="card pad" aria-labelledby="sum-h">
+        <h2 class="t-eyebrow" id="sum-h" style="margin-bottom:12px">Summary</h2>
+        <dl class="kv ruled">
+          <dt>Agent version</dt><dd class="mono">v7 (draft)</dd>
+          <dt>Appointments tomorrow</dt><dd class="num">472</dd>
+          <dt>Calls in first 24 h</dt><dd class="num">~640 incl. retries</dd>
+          <dt>Est. cost / day</dt><dd class="num">$38–52</dd>
+        </dl>
+      </section>
+
+      <section class="card callout-alert" style="overflow:hidden" aria-labelledby="warn-h">
+        <div class="warn-h"><span class="bang" aria-hidden="true">!</span><div><h2 class="t-heading" id="warn-h">1 Test Scenario Failed</h2>
+          <p class="muted" style="margin-top:4px">"Requested slot is taken during the call" failed on Oct 12. Patients may be told a time that isn't booked. <a class="action sm" href="p04-scenarios.html">See the failure</a></p></div></div>
+        <div class="ackrow"><label class="check"><input type="checkbox" id="ack" aria-describedby="why"><span>I understand and want to deploy anyway</span></label></div>
+      </section>
+
+      <button type="button" class="btn btn-primary btn-block" id="dep" aria-disabled="true" aria-describedby="why">Deploy v7</button>
+      <p class="t-caption" id="why" style="text-align:center">Check the box above to enable Deploy.</p>
+      <div style="text-align:center"><a class="btn-tertiary" href="p04-scenarios.html">Back To Tests</a></div>
+    </aside>
+  </div>
+
+</div>
+</main>
+</div>
+
+<script>
+document.getElementById('srcico').innerHTML = NS.check;
+document.querySelectorAll('.input').forEach(i => i.insertAdjacentHTML('beforeend', NS.chevd()));
+
+const ack = document.getElementById('ack'), dep = document.getElementById('dep'), why = document.getElementById('why');
+ack.addEventListener('change', () => {
+  const on = ack.checked;
+  dep.setAttribute('aria-disabled', String(!on));
+  why.textContent = on ? 'You are deploying with 1 failed test scenario. This is recorded in the audit log.' : 'Check the box above to enable Deploy.';
+});
+dep.addEventListener('click', () => {
+  if (dep.getAttribute('aria-disabled') === 'true') { NS.toast('Acknowledge the failed test before deploying.'); ack.focus(); return; }
+  NS.set('deployed', true);
+  NS.toast('Deployed v7 to 3 clinics. Calls start tomorrow at 9 AM.');
+  setTimeout(() => { location.href = 'c02-overview.html'; }, 1100);
+});
+</script>
+</body>
+</html>

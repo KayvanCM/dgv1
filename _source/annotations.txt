@@ -1,0 +1,103 @@
+Templates are working agents, not empty forms. The selected state must be obvious at a glance across six similar cards.
+The details panel previews what the developer inherits before committing. Dense, technical content: what should lead?
+Test scenarios ship with the template so testing starts on minute one (see P04).
+P02 
+ Configure Agent
+P02 
+ Configure Agent
+P02 
+ Configure Agent
+Instructions, models, functions and guardrails
+The prompt is long, technical and the most-edited thing on the page. Monospace shows variables in place; hierarchy should make the numbered rules scannable.
+Variable tokens confirm what data the agent receives from the calendar per call.
+Functions that write to the EHR are labeled separately from read-only lookups. That difference matters for safety.
+Guardrails are toggles for review visibility, but enforced in the prompt and backend. Open question: how much weight should they carry?
+P03 
+ Live Test Call
+P03 
+ Live Test Call
+P03 
+ Live Test Call
+Simulated patient 
+ reschedule scenario
+Simulated patient 
+ reschedule scenario
+Function calls sit inline between speech turns. Hierarchy question: how do they read as system events without drowning out the conversation?
+Live call state summarizes what the agent knows right now. It should change as the call progresses.
+Latency matters for voice: long pauses feel broken to patients. Where does a developer notice a slow turn?
+P03-alt 
+ Test Call 
+ Wrong Person Answers
+P03-alt 
+ Wrong Person Answers
+P03-alt 
+ Wrong Person Answers
+Alternate state: guardrail withholds PHI
+A guardrail firing is a success, not an error. How does the banner signal "working as intended" without the vocabulary of failure?
+The riskiest turn: the son asks about test results. Reviewers need to find this moment fast.
+Showing what the agent did NOT say is unusual. Is a list the right form?
+P04 
+ Test Scenarios & Results
+P04 
+ Test Scenarios & Results
+P04 
+ Test Scenarios & Results
+Pass/fail before deploying
+Seven rows, three outcomes plus Not run. Status is encoded by form so it survives grayscale and color-blind viewing.
+Expected vs. actual is the core debugging comparison. What should the eye land on first?
+This failure is the same incident that later reaches Console (C04-alt). Deploying with a failed scenario should require a deliberate choice.
+ Deploy & Monitor in Console
+C01 
+ Deploy Reminder Campaign
+C01 
+ Deploy Reminder Campaign
+C01 
+ Deploy Reminder Campaign
+Who gets called, when, and what happens if no one answers
+The agent reads and writes the clinic's real calendar. Connection status must be unmistakable.
+Timing rules are where most support tickets come from (calls too early or late). The patient's time zone is the default.
+PHI policy in plain language at the point of decision.
+Deploying with a known failure requires explicit acknowledgment. Should this block entirely? Open question for the candidate.
+C02 
+ Reminders Overview
+C02 
+ Reminders Overview
+C02 
+ Reminders Overview
+Is the agent reducing no-shows, and what needs a human?
+Five numbers compete. The clinic cares most about no-shows; the developer cares about call outcomes. Which leads, and how do the rest step down?
+The queue of calls that need a human is the most actionable thing on the page, yet it sits in the side column. Should it move?
+"Calendar write failed" is the incident from P04 surfacing in production.
+C03 
+ Call Log
+C03 
+ Call Log
+C03 
+ Call Log
+Every call, filterable by outcome
+Rows that need a human must stand out in a dense table without color. The alert form carries it.
+Filter chips double as a count summary. Is that one job too many?
+Patients are shown by first name, last initial and masked phone. Full PHI requires a permission and is logged.
+C04 
+ Call Detail
+C04 
+ Call Detail
+C04 
+ Call Detail
+A successful reschedule, end to end
+Outcome status sits next to the name, but the real answer is the calendar change. Which should lead?
+The write that changed the clinic's calendar. Function results must be checkable against what the agent said aloud.
+Before/after is the most important comparison on the page for front-desk staff.
+PHI is masked by default. Revealing it is permissioned and written to the audit log.
+Low-confidence words on dates and times are the riskiest. Should they be highlighted in the transcript itself?
+C04-alt 
+ Needs Review 
+ Calendar Write Failed
+C04-alt 
+ Needs Review
+C04-alt 
+ Needs Review
+Alternate state: patient told a time that isn
+t booked
+Alternate state: patient told a time that isn
+t booked

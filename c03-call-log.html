@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call Log · Northside Voice</title>
+<link rel="stylesheet" href="northside.css">
+<script src="icons.js"></script>
+<script src="shell.js"></script>
+<style>
+.pin{display:none;margin-left:8px;vertical-align:middle}
+[data-ann="on"] .pin{display:inline-grid}
+.filters{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:flex-end}
+.filters .field{min-width:0}
+.search{width:360px}
+.search .input svg{width:14px;height:14px;color:var(--muted);flex-shrink:0}
+.search .input{justify-content:flex-start}
+.search input::placeholder{color:var(--muted);opacity:1}
+.sel{width:220px}
+.sel.sm{width:160px}
+.outcomes{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip .n{font-size:12px;color:var(--muted)}
+.chip[aria-pressed="true"] .n{color:#fff;opacity:.85}
+.chip .badge{height:20px;padding:0 6px}
+.only-review .tbl tbody tr.flag td{background:transparent}
+.only-review .tbl tbody tr.flag:hover td{background:var(--surface)}
+.tbl-card{overflow:hidden}
+.name{font-weight:500;color:var(--ink);text-decoration:none}
+.name:hover{text-decoration:underline}
+.flag .name{font-weight:600}
+.ph{display:block;font-family:var(--mono);font-size:12px;line-height:16px;color:var(--muted)}
+.why{display:block;margin-top:4px}
+.foot{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-top:12px}
+.empty{padding:48px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty svg{width:24px;height:24px;color:var(--muted)}
+@media (max-width:1180px){.search{width:280px}.sel{width:240px}.sel.sm{width:168px}}
+</style>
+</head>
+<body data-product="cons" data-nav="c03">
+<div class="app">
+<aside class="side" id="side"></aside>
+<main class="main" id="main">
+<div class="page">
+
+  <nav class="crumb" aria-label="Breadcrumb"><a href="c02-overview.html">Overview</a><span class="sl" aria-hidden="true">/</span><span class="cur" aria-current="page">Call Log</span></nav>
+
+  <div class="head">
+    <div>
+      <h1 class="t-title">Calls</h1>
+      <p class="t-caption" style="margin-top:8px" id="sub">1,284 calls in the last 7 days</p>
+    </div>
+    <div class="actions"><button type="button" class="btn btn-secondary" id="export">Export CSV</button></div>
+  </div>
+
+  <section class="annots" aria-label="Brief annotations">
+    <span class="t-eyebrow">Brief annotations for C03</span>
+    <div class="annot"><span class="marker">1</span><p>Rows that need a human must stand out in a dense table without color. The alert form carries it.</p></div>
+    <div class="annot"><span class="marker">2</span><p>Filter chips double as a count summary. Is that one job too many?</p></div>
+    <div class="annot"><span class="marker">3</span><p>Patients are shown by first name, last initial and masked phone. Full PHI requires a permission and is logged.</p></div>
+  </section>
+
+  <p class="sr-only" role="status" id="live"></p>
+
+  <form class="filters" role="search" aria-label="Filter calls" onsubmit="return false">
+    <div class="field search">
+      <label for="q">Search</label>
+      <div class="input"><svg viewBox="0 0 16 16" aria-hidden="true"></svg><input id="q" type="search" placeholder="Patient name, phone or call ID" autocomplete="off"></div>
+    </div>
+    <div class="field sel">
+      <label for="agent">Agent</label>
+      <div class="input"><select id="agent"><option>Appointment Reminders</option><option>Front Desk Intake</option></select><span id="agentChev"></span></div>
+    </div>
+    <div class="field sel sm">
+      <label for="range">Date</label>
+      <div class="input"><select id="range"><option value="today">Today</option><option value="7d" selected>Last 7 days</option><option value="30d">Last 30 days</option></select><span id="rangeChev"></span></div>
+    </div>
+  </form>
+
+  <div class="outcomes" role="group" aria-label="Filter by call outcome" id="tabs"></div>
+  <div class="card tbl-card" id="panel" role="region" aria-label="Calls">
+    <div id="tblHost"></div>
+  </div>
+  <div class="foot">
+    <p class="t-caption">Phone numbers are masked. Full details require a permission and are logged.<span class="marker sm pin" aria-hidden="true">3</span></p>
+    <p class="t-caption num" id="shown"></p>
+  </div>
+
+</div>
+</main>
+</div>
+
+<script>
+const MARIA = 'call_3c71d0';
+const done = NS.isResolved(MARIA);
+
+/* kind: filled=Confirmed, outline=Rescheduled, dashed=No answer, muted=Cancelled/Voicemail, alert=Needs review */
+const ROWS = [
+  { id: MARIA, t: 'Oct 13 10:04', n: 'Maria G.', p: '4471', a: 'Thu Oct 15 · 9:30 AM', d: 'Dr. Okafor', k: done ? 'outline' : 'alert', o: done ? 'Rescheduled' : 'Needs review', why: done ? 'Resolved by front desk' : 'Calendar write failed', tries: 1, dur: '2:12', tab: done ? 'rescheduled' : 'review', href: 'c04-alt-needs-review.html', pin: 1 },
+  { id: 'call_5b20e4', t: 'Oct 13 10:02', n: 'Samuel R.', p: '2208', a: 'Fri Oct 16 · 8:15 AM', d: 'Dr. Alvarez', k: 'filled', o: 'Confirmed', tries: 1, dur: '0:48', tab: 'confirmed' },
+  { id: 'call_8f2a91', t: 'Oct 13 9:58', n: 'Priya N.', p: '7710', a: 'Mon Oct 19 · 10:00 AM', d: 'Dr. Alvarez', k: 'outline', o: 'Rescheduled', tries: 1, dur: '1:47', tab: 'rescheduled', href: 'c04-call-detail.html' },
+  { id: 'call_71d9c3', t: 'Oct 13 9:55', n: 'Evelyn W.', p: '1935', a: 'Thu Oct 15 · 1:00 PM', d: 'Dr. Okafor', k: 'dashed', o: 'No answer', tries: 3, dur: '—', tab: 'noanswer' },
+  { id: 'call_4a63b8', t: 'Oct 13 9:51', n: 'Jorge M.', p: '6082', a: 'Fri Oct 16 · 3:30 PM', d: 'Dr. Lindqvist', k: 'muted', o: 'Voicemail', tries: 2, dur: '0:19', tab: 'noanswer' },
+  { id: 'call_c07e12', t: 'Oct 13 9:47', n: 'Hannah L.', p: '3340', a: 'Thu Oct 15 · 11:45 AM', d: 'Dr. Alvarez', k: 'filled', o: 'Confirmed', tries: 1, dur: '0:52', tab: 'confirmed' },
+  { id: 'call_92f1a5', t: 'Oct 13 9:44', n: 'Linh P.', p: '5519', a: 'Wed Oct 14 · 2:30 PM', d: 'Dr. Okafor', k: 'muted', o: 'Cancelled', tries: 1, dur: '1:21', tab: 'cancelled' },
+  { id: 'call_e38d60', t: 'Oct 13 9:40', n: 'Ahmed K.', p: '8863', a: 'Fri Oct 16 · 9:00 AM', d: 'Dr. Lindqvist', k: 'filled', o: 'Confirmed', tries: 1, dur: '0:44', tab: 'confirmed' }
+];
+/* The other calls waiting for a person. They sit on the Needs Review tab (and in the queue on Overview). */
+const REVIEW_ONLY = [
+  { id: 'call_a1d4f7', t: 'Oct 13 10:11', n: 'James T.', p: '3902', a: 'Wed Oct 21 · 8:45 AM', d: 'Dr. Okafor', why: 'Calendar write failed', tries: 1, dur: '2:05' },
+  { id: 'call_b6c230', t: 'Oct 13 9:12', n: 'Linh P.', p: '5519', a: 'Thu Oct 15 · 4:00 PM', d: 'Dr. Alvarez', why: 'Asked for a person, transfer not answered', tries: 1, dur: '0:38' },
+  { id: 'call_d94e08', t: 'Oct 13 8:47', n: 'Robert K.', p: '6617', a: 'Fri Oct 16 · 10:30 AM', d: 'Dr. Lindqvist', why: 'Identity not verified after 3 attempts', tries: 3, dur: '1:02' },
+  { id: 'call_f27a19', t: 'Oct 13 8:31', n: 'Ana S.', p: '2754', a: 'Mon Oct 19 · 1:15 PM', d: 'Dr. Alvarez', why: 'Low-confidence date', tries: 1, dur: '1:32' },
+  { id: 'call_0be851', t: 'Oct 13 8:20', n: 'Devon M.', p: '9048', a: 'Thu Oct 15 · 3:45 PM', d: 'Dr. Okafor', why: 'Opted out of calls', tries: 1, dur: '0:09' }
+].map(r => Object.assign(r, { k: 'alert', o: 'Needs review', tab: 'review', href: null }));
+
+const ALL = ROWS.concat(REVIEW_ONLY);
+
+const RANGE = {
+  today: { lbl: 'today', total: '186', c: { all: 186, confirmed: 94, rescheduled: 11, cancelled: 5, noanswer: 70 } },
+  '7d':  { lbl: 'the last 7 days', total: '1,284', c: { all: 1284, confirmed: 644, rescheduled: 81, cancelled: 36, noanswer: 517 } },
+  '30d': { lbl: 'the last 30 days', total: '4,912', c: { all: 4912, confirmed: 2388, rescheduled: 312, cancelled: 142, noanswer: 2064 } }
+};
+const TABS = [['all', 'All'], ['confirmed', 'Confirmed'], ['rescheduled', 'Rescheduled'], ['cancelled', 'Cancelled'], ['noanswer', 'No Answer'], ['review', 'Needs Review']];
+const fmt = n => n.toLocaleString('en-US');
+
+let range = '7d';
+let tab = new URLSearchParams(location.search).get('tab') || 'all';
+if (tab === 'needs-review') tab = 'review';
+if (!TABS.some(t => t[0] === tab)) tab = 'all';
+let query = '';
+
+function count(key) {
+  if (key === 'review') return NS.reviewCount();
+  const c = RANGE[range].c[key];
+  /* a resolved call moves from Needs Review into Rescheduled */
+  return key === 'rescheduled' && done ? c + 1 : c;
+}
+
+function renderTabs() {
+  const el = document.getElementById('tabs');
+  el.innerHTML = TABS.map(([k, l]) => {
+    const c = count(k), sel = k === tab;
+    const badge = k === 'review' && c > 0 ? `<span class="badge badge-alert">${c}</span>` : `<span class="n num">${fmt(c)}</span>`;
+    return `<button type="button" class="chip" data-k="${k}" aria-pressed="${sel}">${l}${badge}</button>`;
+  }).join('');
+  el.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
+    tab = b.dataset.k;
+    el.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    renderTable();
+  }));
+}
+
+const digits = s => s.replace(/\D/g, '');
+function visible() {
+  const q = query.trim().toLowerCase();
+  let rows = tab === 'all' ? ROWS : ALL.filter(r => r.tab === tab);
+  /* Resolved Maria stays visible on All and Rescheduled only */
+  if (!q) return rows;
+  return rows.filter(r => r.n.toLowerCase().includes(q) || r.id.toLowerCase().includes(q) || (digits(q) && r.p.includes(digits(q))));
+}
+
+function renderTable() {
+  const rows = visible(), host = document.getElementById('tblHost');
+  const tabLbl = TABS.find(t => t[0] === tab)[1];
+  if (!rows.length) {
+    host.innerHTML = `<div class="empty">${NS.ico('magnifyingglass')}<h2 class="t-heading">No Calls Match</h2><p class="muted">Nothing in ${tabLbl} matches "${query.replace(/</g, '&lt;')}". Try a name, the last 4 digits of a phone, or a call ID.</p><button type="button" class="btn btn-secondary btn-sm" id="clr">Clear Search</button></div>`;
+    document.getElementById('clr').addEventListener('click', () => { query = ''; document.getElementById('q').value = ''; renderTable(); document.getElementById('q').focus(); });
+  } else {
+    host.innerHTML = `<table class="tbl">
+      <caption class="sr-only">Calls, ${tabLbl}. Rows that need review are marked with an alert badge.</caption>
+      <thead><tr><th scope="col">Time</th><th scope="col">Patient</th><th scope="col">Appointment</th><th scope="col">Provider</th><th scope="col">Outcome</th><th scope="col">Tries</th><th scope="col">Duration</th></tr></thead>
+      <tbody>${rows.map(r => `<tr class="link-row ${r.k === 'alert' ? 'flag' : ''}">
+        <td class="mono num" style="color:var(--muted)">${r.t}</td>
+        <td><a class="name" href="${r.href || '#'}" ${r.href ? '' : 'data-nodetail'}>${r.n}</a>${r.pin ? '<span class="marker sm pin" aria-hidden="true">' + r.pin + '</span>' : ''}<span class="ph"><span class="sr-only">Phone ending in </span><span aria-hidden="true">•••• </span>${r.p}</span></td>
+        <td>${r.a}</td>
+        <td class="muted">${r.d}</td>
+        <td><span class="badge badge-${r.k}">${r.o}</span>${r.why ? '<span class="t-caption why">' + r.why + '</span>' : ''}</td>
+        <td class="num">${r.tries}</td>
+        <td class="mono num muted">${r.dur}</td></tr>`).join('')}</tbody></table>`;
+    host.querySelectorAll('tr.link-row').forEach(tr => tr.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      tr.querySelector('a.name').click();
+    }));
+    host.querySelectorAll('a[data-nodetail]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); NS.toast('Only two call details are part of this prototype.'); }));
+  }
+  document.getElementById('panel').classList.toggle('only-review', tab === 'review');
+  const total = count(tab);
+  document.getElementById('shown').textContent = 'Showing ' + rows.length + ' of ' + fmt(tab === 'all' ? total : total) + ' calls';
+  document.getElementById('live').textContent = rows.length + (rows.length === 1 ? ' call shown.' : ' calls shown.');
+}
+
+function renderAll() {
+  document.getElementById('sub').textContent = RANGE[range].total + ' calls in ' + RANGE[range].lbl;
+  renderTabs(); renderTable();
+}
+
+document.getElementById('agentChev').outerHTML = NS.chevd('chev');
+document.getElementById('rangeChev').outerHTML = NS.chevd('chev');
+document.querySelector('.search .input svg').outerHTML = NS.ico('magnifyingglass');
+document.getElementById('q').addEventListener('input', e => { query = e.target.value; renderTable(); });
+document.getElementById('range').addEventListener('change', e => { range = e.target.value; renderAll(); });
+document.getElementById('export').addEventListener('click', () => NS.toast('Exporting ' + RANGE[range].total + ' calls as CSV.'));
+renderAll();
+</script>
+</body>
+</html>

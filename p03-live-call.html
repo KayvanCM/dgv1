@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Test Call · Northside Voice</title>
+<link rel="stylesheet" href="northside.css">
+<script src="icons.js"></script>
+<script src="shell.js"></script>
+<style>
+.tr{list-style:none}
+.callhead{padding:20px 24px;margin-bottom:24px}
+.callhead .r1{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.clock{font-size:28px;line-height:32px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.badge-live{border:1px solid var(--alert);color:var(--alert);background:var(--alert-bg)}
+[data-fi="low"] .badge-live{border-color:var(--ink);color:var(--ink)}
+.lat-strip{display:flex;align-items:flex-end;gap:8px;height:56px;margin:12px 0 4px}
+.lat-strip button{flex:1;background:var(--wave-off);border-radius:2px 2px 0 0;min-width:0}
+.lat-strip button:hover{background:var(--dash)}
+.lat-strip button.slow{background:#fff;border:2px solid var(--warn)}
+[data-fi="low"] .lat-strip button.slow{border-color:var(--ink)}
+.lat-axis{display:flex;justify-content:space-between}
+.flash{animation:flash 1.4s ease-out}
+@keyframes flash{0%{outline:3px solid var(--focus);outline-offset:4px}100%{outline:3px solid transparent;outline-offset:4px}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none;outline:3px solid var(--focus);outline-offset:4px}}
+.speaking .wave{height:24px}
+</style>
+</head>
+<body data-product="play" data-nav="p03">
+<div class="app">
+<aside class="side" id="side"></aside>
+<main class="main" id="main">
+<div class="page">
+
+  <nav class="crumb" aria-label="Breadcrumb"><a href="p01-templates.html">Playground</a><span class="sl" aria-hidden="true">/</span><a href="p02-configure.html">Appointment Reminders</a><span class="sl" aria-hidden="true">/</span><span class="cur" aria-current="page">Test Call</span></nav>
+
+  <section class="annots" aria-label="Brief annotations">
+    <span class="t-eyebrow">Brief annotations for P03</span>
+    <div class="annot"><span class="marker">1</span><p>Function calls sit inline between speech turns. Hierarchy question: how do they read as system events without drowning out the conversation?</p></div>
+    <div class="annot"><span class="marker">2</span><p>Live call state summarizes what the agent knows right now. It should change as the call progresses.</p></div>
+    <div class="annot"><span class="marker">3</span><p>Latency matters for voice: long pauses feel broken to patients. Where does a developer notice a slow turn?</p></div>
+  </section>
+
+  <div class="card callhead">
+    <div class="r1">
+      <div class="row wrapf" style="gap:32px">
+        <div class="row g12">
+          <span class="badge badge-live"><span class="dot live" aria-hidden="true"></span>Live</span>
+          <div><div class="t-eyebrow">Call time</div><div class="clock" id="clock" role="timer" aria-live="off">01:42</div></div>
+        </div>
+        <div><div class="t-eyebrow">Simulated Patient</div><div class="t-heading" style="margin-top:2px">Reschedule</div><div class="muted">Maria G., 59, wants early next week</div><a class="action sm" href="p03-alt-wrong-person.html">Switch To Wrong Person</a></div>
+        <div class="wave" style="width:160px" aria-hidden="true" id="callwave"></div>
+      </div>
+      <div class="row g12 wrapf">
+        <span class="tag">Agent <span class="mono" style="margin-left:4px;color:var(--ink)">v7</span>&nbsp;draft</span>
+        <button type="button" class="btn btn-secondary" id="mute" aria-pressed="false">Mute Agent</button>
+        <button type="button" class="btn btn-primary" id="end">End Call</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cols main-rail">
+    <section aria-labelledby="conv-h">
+      <div class="row between" style="margin-bottom:12px"><h2 class="t-eyebrow" id="conv-h">The Conversation</h2><span class="t-caption">Bars beside agent turns show response time</span></div>
+      <ol class="tr" id="tr"></ol>
+    </section>
+
+    <aside class="stack g16 sticky" aria-label="Call state">
+      <section class="card pad" aria-labelledby="cs-h">
+        <h2 class="t-eyebrow" id="cs-h" style="margin-bottom:12px">Call State</h2>
+        <dl class="kv ruled">
+          <dt>Intent</dt><dd>Reschedule</dd>
+          <dt>Identity</dt><dd><span class="mono">Verified (DOB)</span></dd>
+          <dt>Current appointment</dt><dd>Thu Oct 15 · 9:30 AM</dd>
+          <dt>Slots offered</dt><dd class="num">3</dd>
+          <dt>Calendar writes</dt><dd class="muted">None yet</dd>
+        </dl>
+      </section>
+      <section class="card pad" aria-labelledby="rl-h">
+        <h2 class="t-eyebrow" id="rl-h">Response Latency</h2>
+        <div class="lat-strip" id="latstrip" role="group" aria-label="Agent response time per turn. Select a bar to jump to the turn."></div>
+        <div class="lat-axis t-caption"><span class="mono">00:02</span><span class="mono">01:02</span></div>
+        <dl class="kv ruled" style="margin-top:12px">
+          <dt>Median turn</dt><dd class="mono">590 ms</dd>
+          <dt>Slowest turn</dt><dd class="mono">1.1 s at 00:31</dd>
+          <dt>Slowest function</dt><dd class="mono">check_availability 388 ms</dd>
+        </dl>
+      </section>
+      <section class="card pad" aria-labelledby="gr-h">
+        <h2 class="t-eyebrow" id="gr-h" style="margin-bottom:12px">Guardrails, 3</h2>
+        <div class="lines">
+          <div class="row between"><span>Identity verified before details</span><span class="badge badge-filled">Passed</span></div>
+          <div class="row between"><span>No medical advice</span><span class="badge badge-muted">Not triggered</span></div>
+          <div class="row between"><span>Voicemail without PHI</span><span class="badge badge-dashed">Not applicable</span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+</div>
+</main>
+</div>
+
+<script>
+const fn = (o) => `<li class="fn ${o.bad ? 'bad' : ''} ${o.slow ? 'slowfn' : ''}" ${o.id ? 'id="' + o.id + '"' : ''}>
+  <div class="h"><span aria-hidden="true">{}</span><span class="nm">${o.name}()</span><span class="code">${o.code}</span><span class="ms">${o.ms} ms</span>
+  <span class="dur" aria-hidden="true"><i style="width:${o.dur}%"></i></span>${o.slow ? '<span class="badge badge-dashed" style="font-family:var(--sans)">Slowest function</span>' : ''}</div>
+  <div class="body">${o.args ? '<div>args: ' + o.args + '</div>' : ''}<div class="res">${o.res}</div></div></li>`;
+
+const turn = (side, who, ts, txt, lat, id) => `<li class="turn ${side}" ${id ? 'id="' + id + '"' : ''}>
+  <div class="lat">${lat ? `<span class="bar ${lat.slow ? 'slow' : ''}" style="width:${lat.w}px"></span><span class="v ${lat.slow ? 'slow' : ''}">${lat.v}</span>` : ''}</div>
+  <div class="col"><div class="who-l"><b>${who}</b><span class="mono">${ts}</span></div><div class="bub">${txt}</div></div></li>`;
+
+const agentTurns = [
+  ['t1', '00:02', 480, '480 ms', 0], ['t2', '00:09', 560, '560 ms', 0], ['t3', '00:17', 610, '610 ms', 0],
+  ['t4', '00:31', 1100, '1.1 s', 1], ['t5', '01:02', 640, '640 ms', 0]
+];
+
+document.getElementById('tr').innerHTML = [
+  turn('ag', 'Agent', '00:02', 'Hi, this is the Northside Health assistant calling for Maria. Is this Maria?', { w: 20, v: '480 ms' }, 't1'),
+  turn('pt', 'Patient', '00:06', 'Yes, this is Maria.'),
+  turn('ag', 'Agent', '00:09', 'Thanks. For your privacy, can you confirm your date of birth?', { w: 24, v: '560 ms' }, 't2'),
+  turn('pt', 'Patient', '00:13', 'March 3rd, 1967.'),
+  fn({ name: 'verify_identity', code: 200, ms: 212, dur: 55, res: '→ { verified: true }' }),
+  turn('ag', 'Agent', '00:17', "Thank you. I'm calling about your visit with Dr. Okafor on Thursday, October 15 at 9:30 AM. Can you make it?", { w: 28, v: '610 ms' }, 't3'),
+  turn('pt', 'Patient', '00:24', "Actually I can't do Thursday. Do you have anything early next week?"),
+  fn({ name: 'check_availability', code: 200, ms: 388, dur: 100, slow: 1, args: '{ provider: "dr_okafor", from: "2026-10-19", to: "2026-10-21" }', res: '→ 3 slots: Mon 19 10:00 · Tue 20 14:15 · Wed 21 08:45' }),
+  turn('ag', 'Agent', '00:31', 'I have Monday the 19th at 10 AM, Tuesday the 20th at 2:15 PM, or Wednesday the 21st at 8:45 AM. Which works best?', { w: 48, v: '1.1 s', slow: 1 }, 't4'),
+  turn('pt', 'Patient', '00:44', 'Let me think. What about Wednesday morning?'),
+  turn('ag', 'Agent', '01:02', 'Wednesday the 21st at 8:45 AM with Dr. Okafor. Want me to book it?', { w: 28, v: '640 ms' }, 't5'),
+  `<li class="turn pt speaking"><div class="lat"></div><div class="col"><div class="who-l"><b>Patient</b><span class="mono">01:40</span></div><div class="row g8"><div class="wave" aria-hidden="true">${NS.wave(10, 10)}</div><span class="t-caption">Speaking</span></div></div></li>`
+].join('');
+
+document.getElementById('callwave').innerHTML = NS.wave(48, 34);
+
+document.getElementById('latstrip').innerHTML = agentTurns.map(([id, ts, w, v, slow], i) =>
+  `<button type="button" class="${slow ? 'slow' : ''}" style="height:${Math.round(w / 11)}%" data-t="${id}" aria-label="Turn ${i + 1} at ${ts}, ${v}${slow ? ', slowest turn' : ''}"></button>`).join('');
+document.querySelectorAll('#latstrip button').forEach(b => b.addEventListener('click', () => {
+  const t = document.getElementById(b.dataset.t); t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash');
+}));
+
+/* live clock */
+let secs = 102; const clock = document.getElementById('clock');
+const fmt = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+const tick = setInterval(() => { secs++; clock.textContent = fmt(secs); }, 1000);
+
+document.getElementById('mute').addEventListener('click', e => {
+  const b = e.currentTarget, on = b.getAttribute('aria-pressed') !== 'true';
+  b.setAttribute('aria-pressed', String(on)); b.textContent = on ? 'Unmute Agent' : 'Mute Agent';
+});
+document.getElementById('end').addEventListener('click', () => {
+  clearInterval(tick); NS.toast('Call ended. Results are in Test Scenarios.');
+  setTimeout(() => { location.href = 'p04-scenarios.html'; }, 900);
+});
+</script>
+</body>
+</html>

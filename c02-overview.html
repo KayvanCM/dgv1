@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reminders Overview · Northside Voice</title>
+<link rel="stylesheet" href="northside.css">
+<script src="icons.js"></script>
+<script src="shell.js"></script>
+<style>
+.pin{display:none;margin-left:8px}
+[data-ann="on"] .pin{display:inline-grid}
+.ctx{margin-top:8px;color:var(--muted)}
+.dep{display:inline-flex;align-items:center;gap:8px;margin-top:8px;color:var(--ok)}
+[data-fi="low"] .dep{color:var(--ink)}
+.dep svg{width:14px;height:14px}
+
+/* Needs Attention leads the page. The brief asks whether the queue should leave the side column:
+   it moves to the top, because it is the only element on this screen that asks for an action today,
+   and Teresa checks it first every morning. The metrics step down beneath it. */
+.na{border-color:var(--alert-line)}
+.na-list{list-style:none}
+.q-row{display:grid;grid-template-columns:24px 232px minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--fill);text-decoration:none;color:inherit}
+.na-list li:last-child .q-row{border-bottom:0;border-radius:0 0 7px 7px}
+.q-row:hover{background:var(--surface)}
+.q-row:focus-visible{outline-offset:-2px}
+.q-row.hi{background:var(--alert-bg)}
+[data-fi="low"] .q-row.hi{background:var(--surface)}
+.q-row.hi:hover{background:var(--alert-bg);filter:brightness(.97)}
+.q-row .why{font-weight:500}
+.q-row.hi .why{font-weight:600;color:var(--alert)}
+[data-fi="low"] .q-row.hi .why{color:var(--ink)}
+.q-row .ic{width:16px;height:16px;color:var(--muted)}
+.q-row.hi .ic{color:var(--alert)}
+[data-fi="low"] .q-row.hi .ic{color:var(--ink)}
+.q-row .go{display:inline-flex;align-items:center;gap:4px;font-size:14px;color:var(--link);text-decoration:underline;text-underline-offset:3px}
+.q-row .go svg{width:12px;height:12px}
+
+.mgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto;gap:16px}
+.mgrid .hero{grid-row:1 / span 2;display:flex;flex-direction:column;justify-content:space-between;padding:20px 24px}
+.mgrid .metric .big{margin:4px 0}
+.mgrid .hero .big{margin:0 0 8px}
+.chart-wrap{position:relative}
+.chart-wrap svg text{font-family:var(--sans)}
+.legend{display:flex;gap:20px;align-items:center}
+.sw-l{display:inline-block;width:20px;height:0;border-top:2px solid var(--dash);vertical-align:middle;margin-right:8px}
+.sw-l.post{border-top-color:var(--info)}
+@media (max-width:1180px){
+  .q-row{grid-template-columns:24px 180px minmax(0,1fr) auto}
+  .mgrid{grid-template-columns:1fr 1fr}
+  .mgrid .hero{grid-column:1 / span 2;grid-row:auto}
+}
+</style>
+</head>
+<body data-product="cons" data-nav="c02">
+<div class="app">
+<aside class="side" id="side"></aside>
+<main class="main" id="main">
+<div class="page">
+
+  <nav class="crumb" aria-label="Breadcrumb"><a href="c02-overview.html">Overview</a><span class="sl" aria-hidden="true">/</span><span class="cur" aria-current="page">Appointment Reminders</span></nav>
+
+  <div class="head">
+    <div>
+      <h1 class="t-title">Reminders Overview</h1>
+      <p class="ctx t-caption" style="max-width:none"><span class="mono">Agent v7</span> (deployed Oct 13) · reminders live since Sep 15 · <span id="rangeLbl">last 7 days</span></p>
+      <p class="dep t-caption" id="depLine" hidden></p>
+    </div>
+    <div class="actions">
+      <div class="seg" role="group" aria-label="Date range" id="range">
+        <button type="button" data-r="today" aria-pressed="false">Today</button>
+        <button type="button" data-r="7d" aria-pressed="true">7 Days</button>
+        <button type="button" data-r="30d" aria-pressed="false">30 Days</button>
+        <button type="button" data-r="custom" aria-pressed="false">Custom</button>
+      </div>
+      <button type="button" class="btn btn-secondary" id="export">Export</button>
+    </div>
+  </div>
+  <hr class="div">
+
+  <section class="annots" aria-label="Brief annotations">
+    <span class="t-eyebrow">Brief annotations for C02</span>
+    <div class="annot"><span class="marker">1</span><p>Five numbers compete. The clinic cares most about no-shows; the developer cares about call outcomes. Which leads, and how do the rest step down?</p></div>
+    <div class="annot"><span class="marker">2</span><p>The queue of calls that need a human is the most actionable thing on the page, yet it sits in the side column. Should it move?</p></div>
+    <div class="annot"><span class="marker">3</span><p>"Calendar write failed" is the incident from P04 surfacing in production.</p></div>
+  </section>
+
+  <p class="sr-only" role="status" id="live"></p>
+
+  <section class="card na sect" aria-labelledby="na-h" id="naCard">
+    <div class="card-h">
+      <div class="row g12">
+        <h2 class="t-headline" id="na-h">Needs Attention</h2>
+        <span class="badge badge-alert" id="naCount">6 calls</span>
+        <span class="marker sm pin" aria-hidden="true">2</span>
+      </div>
+      <a class="action" href="c03-call-log.html?tab=review">View All</a>
+    </div>
+    <ul class="na-list" id="naList"></ul>
+  </section>
+
+  <section class="sect" aria-labelledby="m-h">
+    <h2 class="t-eyebrow" id="m-h">Results<span class="marker sm pin" aria-hidden="true">1</span></h2>
+    <div class="mgrid" id="metrics"></div>
+  </section>
+
+  <section class="card pad" aria-labelledby="ch-h">
+    <div class="row between" style="margin-bottom:4px">
+      <h2 class="t-heading" id="ch-h">No-Show Rate, Last 12 Weeks</h2>
+      <span class="t-caption mono" id="readout" aria-hidden="true">Jul 21 to Oct 12</span>
+    </div>
+    <p class="t-caption" style="margin-bottom:12px">Share of booked appointments where the patient did not show. Lower is better.</p>
+    <div class="chart-wrap" id="chartWrap"></div>
+    <table class="sr-only">
+      <caption>No-show rate by week, Jul 21 to Oct 12. The agent went live Sep 15.</caption>
+      <thead><tr><th scope="col">Week of</th><th scope="col">No-show rate</th></tr></thead>
+      <tbody id="chartTbl"></tbody>
+    </table>
+  </section>
+
+</div>
+</main>
+</div>
+
+<script>
+/* ---------- data, per range ---------- */
+const RANGES = {
+  today: { lbl: 'today', noshow: '5.9%', calls: '186', appts: '131 appointments', conf: '72%', confN: '94 appointments', resch: 11, unr: '16%', unrN: 'after all retries', failed: 2, total: 186 },
+  '7d':  { lbl: 'last 7 days', noshow: '6.2%', calls: '1,284', appts: '902 appointments', conf: '71%', confN: '644 appointments', resch: 81, unr: '16%', unrN: 'after all retries', failed: 2, total: 1284 },
+  '30d': { lbl: 'last 30 days', noshow: '7.4%', calls: '4,912', appts: '3,461 appointments', conf: '69%', confN: '2,388 appointments', resch: 312, unr: '18%', unrN: 'after all retries', failed: 2, total: 4912 }
+};
+let cur = '7d';
+
+const MARIA = 'call_3c71d0';
+const done = NS.isResolved(MARIA);
+
+/* ---------- Needs Attention ---------- */
+const NA = [
+  { id: MARIA, why: 'Calendar write failed', who: 'Maria G.', meta: 'Tue Oct 20, 2:15 PM', href: 'c04-alt-needs-review.html', alert: 1, ic: 'exclamationmark.triangle.fill', pin: 3 },
+  { id: 'james', why: 'Calendar write failed', who: 'James T.', meta: 'Wed Oct 21, 8:45 AM', href: 'c03-call-log.html?tab=review', alert: 1, ic: 'exclamationmark.triangle.fill' },
+  { id: 'linh', why: 'Asked for a person', who: 'Linh P.', meta: 'Transfer not answered', href: 'c03-call-log.html?tab=review', ic: 'person.2' },
+  { id: 'robert', why: 'Identity not verified', who: 'Robert K.', meta: '3 attempts', href: 'c03-call-log.html?tab=review', ic: 'exclamationmark.circle' },
+  { id: 'ana', why: 'Low-confidence date', who: 'Ana S.', meta: '"the fifteenth or fiftieth"', href: 'c03-call-log.html?tab=review', ic: 'calendar' },
+  { id: 'devon', why: 'Opted out of calls', who: 'Devon M.', meta: '', href: 'c03-call-log.html?tab=review', ic: 'bell' }
+].filter(r => !(r.id === MARIA && done));
+
+document.getElementById('naList').innerHTML = NA.map(r => `<li><a class="q-row ${r.alert ? 'hi' : ''}" href="${r.href}">
+  ${NS.ico(r.ic, 'ic')}
+  <span class="why">${r.why}</span>
+  <span><b style="font-weight:500">${r.who}</b>${r.meta ? ' <span class="muted">· ' + r.meta + '</span>' : ''}${r.pin ? '<span class="marker sm pin" aria-hidden="true">' + r.pin + '</span>' : ''}</span>
+  <span class="go">Open${NS.chev()}</span></a></li>`).join('');
+const n = NA.length;
+document.getElementById('naCount').textContent = n + (n === 1 ? ' call' : ' calls');
+
+/* ---------- metrics ---------- */
+function failedCount() { return Math.max(0, RANGES[cur].failed - (done ? 1 : 0)); }
+function renderMetrics() {
+  const d = RANGES[cur];
+  const f = failedCount();
+  document.getElementById('metrics').innerHTML = `
+    <div class="card hero"><div class="t-eyebrow">No-Show Rate</div><div><div class="t-display num">${d.noshow}</div><div class="muted">was 11.8% before the agent</div></div></div>
+    <div class="card metric"><div class="t-eyebrow">Calls Placed</div><div class="big">${d.calls}</div><div class="muted">across ${d.appts}</div></div>
+    <div class="card metric"><div class="t-eyebrow">Confirmed</div><div class="big">${d.conf}</div><div class="muted">${d.confN}</div></div>
+    <div class="card metric"><div class="t-eyebrow">Rescheduled</div><div class="big">${d.resch}</div>
+      <div>${f ? `<span class="badge badge-alert">${f} failed to write</span>` : '<span class="muted">All calendar writes succeeded</span>'}</div></div>
+    <div class="card metric"><div class="t-eyebrow">Unreached</div><div class="big">${d.unr}</div><div class="muted">${d.unrN}</div></div>`;
+  document.getElementById('rangeLbl').textContent = d.lbl;
+  document.getElementById('live').textContent = 'Showing results for ' + d.lbl + '.';
+}
+renderMetrics();
+
+document.querySelectorAll('#range button').forEach(b => b.addEventListener('click', () => {
+  if (b.dataset.r === 'custom') { NS.toast('Custom date ranges are not part of this prototype.'); return; }
+  cur = b.dataset.r;
+  document.querySelectorAll('#range button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  renderMetrics();
+}));
+document.getElementById('export').addEventListener('click', () => NS.toast('Exporting ' + RANGES[cur].total.toLocaleString('en-US') + ' calls as CSV.'));
+
+if (NS.get('deployed')) {
+  const l = document.getElementById('depLine'); l.hidden = false;
+  l.innerHTML = NS.check.replace('<svg ', '<svg width="14" height="14" ') + '<span>Agent v7 deployed just now</span>';
+}
+
+/* ---------- trend chart: 12 weekly points, Jul 21 to Oct 12 ---------- */
+const PTS = [11.8, 11.6, 11.9, 11.5, 11.7, 11.3, 10.9, 9.4, 8.1, 7.0, 6.5, 6.2];
+const LIVE = 8; /* Sep 15 */
+const wk = i => { const d = new Date(2026, 6, 21 + i * 7); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
+document.getElementById('chartTbl').innerHTML = PTS.map((v, i) => `<tr><th scope="row">${wk(i)}${i === LIVE ? ' (agent went live)' : ''}</th><td>${v}%</td></tr>`).join('');
+
+const wrap = document.getElementById('chartWrap');
+const readout = document.getElementById('readout');
+function draw() {
+  const W = Math.max(wrap.clientWidth, 320), H = 248;
+  const L = 44, R = 56, T = 40, B = 36, pw = W - L - R, ph = H - T - B, MAX = 14;
+  const X = i => L + i * pw / (PTS.length - 1), Y = v => T + ph - v / MAX * ph;
+  const seg = (a, b) => PTS.slice(a, b + 1).map((v, k) => (k ? 'L' : 'M') + X(a + k).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+  const grid = [0, 5, 10].map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#EBEBEB"/><text x="${L - 8}" y="${Y(v) + 4}" font-size="12" fill="#626262" text-anchor="end">${v}%</text>`).join('');
+  const halo = 'paint-order="stroke" stroke="#fff" stroke-width="4" stroke-linejoin="round"';
+  const ex = X(LIVE);
+  const last = PTS.length - 1;
+  document.getElementById('chartWrap').innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Line chart. The no-show rate was about 11.8 percent in the week of Jul 21, held near 11 to 12 percent until the agent went live on Sep 15, then fell to 6.2 percent by the week of Oct 6.">
+    ${grid}
+    <line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="#D1D1D1"/>
+    <path d="${seg(0, LIVE)}" fill="none" stroke="#6B6B6B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${seg(LIVE, last)}" fill="none" stroke="var(--info)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <line x1="${ex}" x2="${ex}" y1="${T - 12}" y2="${Y(0)}" stroke="#1A1A1A" stroke-dasharray="3 3"/>
+    <text x="${ex + 8}" y="${T - 4}" font-size="12" font-weight="500" fill="#1A1A1A">Agent live, Sep 15</text>
+    <circle cx="${ex}" cy="${Y(PTS[LIVE])}" r="5" fill="#fff" stroke="#1A1A1A" stroke-width="2"/>
+    <circle cx="${X(last)}" cy="${Y(PTS[last])}" r="5" fill="#1A1A1A"/>
+    <text x="${X(0)}" y="${Y(PTS[0]) - 10}" font-size="12" font-weight="600" fill="#1A1A1A" ${halo}>11.8%</text>
+    <text x="${X(last)}" y="${Y(PTS[last]) - 12}" font-size="12" font-weight="600" fill="#1A1A1A" text-anchor="middle" ${halo}>6.2%</text>
+    <text x="${L}" y="${H - 10}" font-size="12" fill="#626262">Jul 21</text>
+    <text x="${W - R}" y="${H - 10}" font-size="12" fill="#626262" text-anchor="end">Oct 12</text>
+    <g id="hov" hidden><line id="hl" y1="${T - 12}" y2="${Y(0)}" stroke="#6B6B6B"/><circle id="hd" r="4" fill="#fff" stroke="#1A1A1A" stroke-width="2"/></g>
+    <rect id="hit" x="${L}" y="${T - 12}" width="${pw}" height="${ph + 12}" fill="transparent"/>
+  </svg>`;
+  const hit = document.getElementById('hit'), hov = document.getElementById('hov');
+  hit.addEventListener('mousemove', e => {
+    const r = hit.getBoundingClientRect();
+    const i = Math.max(0, Math.min(last, Math.round((e.clientX - r.left) / r.width * last)));
+    hov.removeAttribute('hidden');
+    document.getElementById('hl').setAttribute('x1', X(i)); document.getElementById('hl').setAttribute('x2', X(i));
+    document.getElementById('hd').setAttribute('cx', X(i)); document.getElementById('hd').setAttribute('cy', Y(PTS[i]));
+    readout.textContent = 'Week of ' + wk(i) + ' · ' + PTS[i] + '%';
+  });
+  hit.addEventListener('mouseleave', () => { hov.setAttribute('hidden', ''); readout.textContent = 'Jul 21 to Oct 12'; });
+}
+draw();
+new ResizeObserver(() => draw()).observe(wrap);
+</script>
+</body>
+</html>
